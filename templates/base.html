@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Portfolio{% endblock %}</title>
 
-        <!-- Inclusion de fichiers CSS -->
-        <link href="/static/css/tailwind.css" rel="stylesheet">
-    </head>
-    <body class="text-gray-500">
-        <!-- Contenu dynamique de Django -->
-        {% block content %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfolio{% endblock %}</title>
 
-        <!-- Inclusion de fichiers JavaScript -->
-        <script src="/static/js/tailwind.js"></script>
+    <!-- Inclusion de fichiers CSS -->
+    <style>
+        /* Style global pour toutes les barres de défilement */
+        ::-webkit-scrollbar {
+            width: 5px;
+            /* Largeur de la scrollbar */
+            height: 10px;
+            /* Hauteur de la scrollbar (scroll horizontal) */
+        }
 
-        <!-- Script LiveReload pour recharger automatiquement le navigateur -->
-        <script>
+        ::-webkit-scrollbar-thumb {
+            background: #818cf8;
+            /* Couleur de la barre (thumb) */
+            border-radius: 5px;
+            /* Coins arrondis */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #eef2ff;
+            /* Couleur de la piste (track) */
+        }
+    </style>
+</head>
+
+<body class="text-gray-500">
+    <!-- Contenu dynamique de Django -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Inclusion de fichiers JavaScript -->
+    <script src="/static/js/tailwind.js"></script>
+
+    <!-- Script LiveReload pour recharger automatiquement le navigateur -->
+    <script>
         // Vérifie si LiveReload est actif et intègre le script
         if (location.host.includes("127.0.0.1") || location.host.includes("localhost")) {
             document.write('<script src="http://localhost:35729/livereload.js?snipver=1"></' + 'script>');
         }
     </script>
-        <script src="/static/js/active-links.js"></script>
-    </body>
+    <script src="/static/js/active-links.js"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+</body>
+
 </html>
