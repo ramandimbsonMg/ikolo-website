@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header
+    class="fixed top-0 bg-white border-l border-2 border-t border-b border-indigo-600 w-[15.5em] h-screen shadow-md z-10">
+    <nav class="container mx-auto px-4 py-3 items-center">
+        <div
+            class="rounded-full w-[130px] h-[130px] border-2 border-indigo-600 justify-center items-center flex">
+            <img src="/static/images/profile.jpg" alt
+                class="rounded-full w-[120px] h-[120px]">
+        </div>
+        <h1 class="text-xl font-bold text-indigo-600">Ramandimbson Espoir Matieu
+            Albertin</h1>
+        <div
+            class="bg-indigo-600 text-white text-lg p-2 w-[230px] absolute">Developpeur
+            front-end</div>
+        <ul class="space-y-4 mt-14 px-6">
+            <li><a href="#section1"
+                    class="menu-link text-indigo-900 hover:text-indigo-400 ">Accueil</a></li>
+            <li><a href="#section2"
+                    class="menu-link text-indigo-900 hover:text-indigo-400 ">Etucation</a></li>
+            <li><a href="#section3"
+                    class="menu-link text-indigo-900 hover:text-indigo-400 ">Competences</a></li>
+            <li><a href="#section4"
+                    class="menu-link text-indigo-900 hover:text-indigo-400 ">Experiences</a></li>
+            <li><a href="#section5"
+                    class="menu-link text-indigo-900 hover:text-indigo-400 ">Centre
+                    d'interet</a></li>
+        </ul>
+
+    </nav>
+</header>
+
+<!-- Contenu principal -->
+<main class="container mx-auto px-4 py-10">
+    <section id="section1"
+        class="h-screen bg-blue-50 flex items-center justify-center">
+        <h1 class="text-3xl font-bold text-blue-600">Bienvenue sur la page
+            d'accueil</h1>
+    </section>
+    <section id="section2"
+        class="h-screen bg-green-50 flex items-center justify-center">
+        <h1 class="text-3xl font-bold text-green-600">Nos services</h1>
+    </section>
+    <section id="section3"
+        class="h-screen bg-yellow-50 flex items-center justify-center">
+        <h1 class="text-3xl font-bold text-yellow-600">Contactez-nous</h1>
+    </section>
+    <section id="section4"
+        class="h-screen bg-yellow-50 flex items-center justify-center">
+        <h1 class="text-3xl font-bold text-yellow-600">Contactez-nous</h1>
+    </section>
+    <section id="section5"
+        class="h-screen bg-yellow-50 flex items-center justify-center">
+        <h1 class="text-3xl font-bold text-yellow-600">Contactez-nous</h1>
+    </section>
+    
+</main>
+{% endblock %}
