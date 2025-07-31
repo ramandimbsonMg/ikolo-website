@@ -1,0 +1,95 @@
+            <div className="lg:grid lg:grid-cols-12 mt-4 gap-6">
+                <div className="flex items-center h-full col-span-10">
+                    <div className="">
+                        <Typography
+                            variant="display"
+                            theme="black"
+                            className="max-w-2xl mx-auto animate-slideInUp text-primary-800"
+                        >
+                            Bonjour ! <br className="py-6" />
+                            Je souhaite de faite bienvenu
+                        </Typography>
+
+                        <Typography
+                            variant="lg"
+                            component="p"
+                            theme="gray"
+                            className="max-w-2xl mx-auto mt-3 animate-slideInUp"
+                        >
+                            Biizina est une plateforme où vous pouvez partager vos produits, créer des liens et interagir avec une communauté dynamique de vendeurs et d'acheteurs. 🛒✨
+                            Publiez vos articles et commencez à vendre dès aujourd'hui!
+                        </Typography>
+                        <div className="flex items-center gap-6">
+                            <Button variant="accent" className="px-10 mt-4">Mon portfolio</Button>
+                            <Button variant="secondary" className="px-10 mt-4">Telecharger resumer CV</Button>
+                        </div>
+                        {/* <hr className="mt-6 mb-6" /> */}
+                        <div className="space-y-4 mt-4 border p-4 rounded-xl">
+                            <Typography component="div" variant="large" weight="medium"
+                                theme="black"
+                                className="flex items-center gap-3 font-semibold">
+                                <div className="justify-end left-0">
+                                    <p className="w-14 h-14 justify-center flex items-center rounded-xl bg-primary">
+                                        <AiFillIdcard className="w-10 h-10 text-white" />
+                                    </p>
+                                </div>
+                                <span className="underline">RAMANDIMBSON Espoir Matieu Albertin</span>
+                            </Typography>
+                            <div className="px-16 space-y-2">
+                                <Link href="">
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlineEnvironment className="w-6 h-6 text-primary" />
+                                        Antananarivo - Sabotsy Namehana - Madagascar
+                                    </Typography>
+                                </Link>
+                                <Link href="">
+
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlineMail className="w-6 h-6 text-primary" />
+                                        ramandimbsonespoir@gmail.com
+                                    </Typography>
+                                </Link>
+                                <Link href="">
+
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlinePhone className="w-6 h-6 text-primary" />
+                                        <a href="" target="_blank">+261 38 90 524 67</a>
+                                        -
+                                        <a href="" target="_blank">+261 89 247 94</a>
+                                    </Typography>
+                                </Link>
+                                <Link href="">
+
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlineGithub className="w-6 h-6 text-primary" />
+                                        Github
+                                    </Typography>
+                                </Link>
+                                <Link href="">
+
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlineLinkedin className="w-6 h-6 text-primary" />
+                                        Linkedin
+                                    </Typography>
+                                </Link>
+                                <Link href="">
+
+                                    <Typography variant="lg" weight="medium" className="flex items-center gap-4">
+                                        <AiOutlineFacebook className="w-6 h-6 text-primary" />
+                                        Facebook
+                                    </Typography>
+                                </Link>
+
+                            </div>
+                            {/* < AiFillContacts className="w-6 h-6" />                                 */}
+                        </div>
+                    </div>
+                </div>
+                <div className="col-span-2 border-primary border-4 h-24 w-24">
+                    <Image
+                        src="assets/images/avatar/cute-boy.jpg"
+                        alt="QrCode pour Ramandimbson Espoir M.A"
+                        width={100}
+                        height={100} />
+                </div>
+            </div>
