@@ -42,13 +42,13 @@ export const Footer = ({ className }: Props) => {
         {/* FOOTER SECTION */}
         <footer className="bg-white py-16 px-4 text-gray-500">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="flex flex-wrap justify-center gap-6 text-3xl text-gray-400 mb-6">
+            {/* <div className="flex flex-wrap justify-center gap-6 text-3xl text-gray-400 mb-6">
               <FaGithub className="hover:text-blue-500 transition cursor-pointer" />
               <FaGooglePlusG className="hover:text-blue-500 transition cursor-pointer" />
               <FaStackOverflow className="hover:text-blue-500 transition cursor-pointer" />
               <FaHtml5 className="hover:text-blue-500 transition cursor-pointer" />
               <FaSkype className="hover:text-blue-500 transition cursor-pointer" />
-            </div>
+            </div> */}
             <p>Merci de visiter mon profil. N’hésitez pas à me contacter !</p>
             <p className="mt-2">
               Espoir — Développeur & Étudiant à Madagascar 🇲🇬

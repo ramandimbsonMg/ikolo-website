@@ -195,7 +195,7 @@ export const AProposView = () => {
     <Container className="lg:mt-6 px-6 max-w-[94em] mx-auto container space-y-4 mb-10 w-screen relative">
       <div className="text-center justify-center flex items-center mt-8">
         <Typography variant="display" theme="black" className="mt-28">
-          À propos de moi
+          À propos
           <svg
             viewBox="0 0 200 20"
             xmlns="http://www.w3.org/2000/svg"

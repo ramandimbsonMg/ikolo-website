@@ -35,7 +35,7 @@ const tabs: Tab[] = [
     products: [
       {
         id: 1,
-        link: "https://biizina.web.app/",
+        link: "https://missera.netlify.app/",
         title: "Biizina",
         subtitle: "Plateforme sociale et e-commerce",
         img: "/assets/images/portfolio/pc1.png",
@@ -48,16 +48,11 @@ const tabs: Tab[] = [
       },
       {
         id: 2,
+        link: "https://youngforchrist.netlify.app/",
         title: "Badge Scolaire – Génération automatique de cartes étudiants",
         subtitle: "Interface de vente dynamique",
-        img: "/assets/images/portfolio/SekPrint/etudiant.png",
-        images: [
-          "/assets/images/portfolio/SekPrint/landing.png",
-          "/assets/images/portfolio/SekPrint/dahboard.png",
-          "/assets/images/portfolio/SekPrint/ecole.png",
-          "/assets/images/portfolio/SekPrint/classe.png",
-          "/assets/images/portfolio/SekPrint/etudiant.png",
-        ],
+        img: "/assets/images/portfolio/church/landing.png",
+        images: ["/assets/images/portfolio/church/landing.png"],
         description:
           "Application web développée avec Django permettant la création, l’affichage et l’impression de badges scolaires personnalisés pour chaque étudiant. Elle facilite : l’enregistrement des informations (nom, photo, classe, etc.), la génération de badges PDF par étudiant ou en lot, l’utilisation d’un QR code ou d’un identifiant unique pour chaque badge, un affichage responsive adapté à l’impression papier.",
       },
@@ -99,12 +94,34 @@ const tabs: Tab[] = [
     products: [
       {
         id: 5,
-        title: "Application de gestion",
+        title: "Gestion scolaire – développée avec Laravel PHP et PostgreSQL",
         subtitle: "CRUD + Auth + Dashboard",
-        img: "/assets/images/portfolio/app-fullstack.jpg",
-        images: ["/assets/images/portfolio/app-fullstack.jpg"],
+        img: "/assets/images/portfolio/GestionScholaire/dashboard.png",
+        images: [
+          "/assets/images/portfolio/GestionScholaire/login.png",
+          "/assets/images/portfolio/GestionScholaire/registre.png",
+          "/assets/images/portfolio/GestionScholaire/listuser.png",
+          "/assets/images/portfolio/GestionScholaire/eleves.png",
+          "/assets/images/portfolio/GestionScholaire/sold.png",
+          "/assets/images/portfolio/GestionScholaire/sold2.png",
+        ],
         description:
-          "Application complète avec front-end en React, back-end Node.js/Express, et base de données MongoDB. Inclut système d’authentification, formulaires dynamiques, et tableau de bord d’administration.",
+          "Une application web de gestion scolaire développée avec Laravel PHP et PostgreSQL. Elle permet aux administrateurs de gérer les informations des professeurs et des élèves, de suivre les paiements des frais de scolarité et d’imprimer des reçus via une petite imprimante.",
+      },
+      {
+        id: 6,
+        title: "Badge Scolaire – Génération automatique de cartes étudiants",
+        subtitle: "CRUD + Auth + Dashboard",
+        img: "/assets/images/portfolio/SekPrint/etudiant.png",
+        images: [
+          "/assets/images/portfolio/SekPrint/landing.png",
+          "/assets/images/portfolio/SekPrint/dashboard.png",
+          "/assets/images/portfolio/SekPrint/ecole.png",
+          "/assets/images/portfolio/SekPrint/classe.png",
+          "/assets/images/portfolio/SekPrint/etudiant.png",
+        ],
+        description:
+          "Application web développée avec Django permettant la création, l’affichage et l’impression de badges scolaires personnalisés pour chaque étudiant. Elle facilite : l’enregistrement des informations (nom, photo, classe, etc.), la génération de badges PDF par étudiant ou en lot, l’utilisation d’un QR code ou d’un identifiant unique pour chaque badge, un affichage responsive adapté à l’impression papier.",
       },
     ],
   },
@@ -192,6 +209,7 @@ export default function PortfolioView() {
                     />
                     <Button
                       variant="ico"
+                      baseUrl={product.link}
                       size="small"
                       icon={{ icon: AiOutlineArrowRight }}
                     />

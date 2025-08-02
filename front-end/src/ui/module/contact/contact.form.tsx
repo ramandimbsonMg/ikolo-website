@@ -17,32 +17,34 @@ export const ContactForm = () => {
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setResponseMessage("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setResponseMessage("");
-
-    try {
-      const { data } = await axios.post("/api/sendMail", formData);
-      setResponseMessage(data.message);
+  try {
+    const response = await axios.post("/api/contact", formData);
+    if (response.status === 200) {
+      setResponseMessage("Message envoyé avec succès !");
       setFormData({ nom: "", email: "", sujet: "", message: "" });
-    } catch (error) {
-      setResponseMessage("Erreur lors de l'envoi du message.");
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    setResponseMessage("Erreur lors de l'envoi du message.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-2">
         <div>
           <label
-            className="font-semibold text-2xl lg:text-[14px] sm:text-2xl"
+            className="font-semibold lg:text-[14px]"
             htmlFor="nom"
           >
-            Votre Nom
+            Nom d'Entreprise
           </label>
           <input
             type="text"
@@ -50,13 +52,13 @@ export const ContactForm = () => {
             value={formData.nom}
             onChange={handleChange}
             placeholder="Ajouter Nom"
-            className="border rounded p-2 px-6 w-full h-12 text-md"
+            className="border rounded-lg p-2 px-3 w-full h-12 text-md"
             required
           />
         </div>
         <div>
           <label
-            className="font-semibold text-2xl lg:text-[14px] sm:text-2xl"
+            className="font-semibold lg:text-[14px]"
             htmlFor="email"
           >
             Votre Email
@@ -66,14 +68,14 @@ export const ContactForm = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="votre email@gmail.com"
-            className="border rounded p-2 px-6 w-full h-12 text-md"
+            placeholder="example@gmail.com"
+            className="border rounded-lg p-2 px-3 w-full h-12 text-md"
             required
           />
         </div>
         <div>
           <label
-            className="font-semibold text-2xl lg:text-[14px] sm:text-2xl"
+            className="font-semibold lg:text-[14px]"
             htmlFor="sujet"
           >
             Votre Sujet
@@ -84,13 +86,13 @@ export const ContactForm = () => {
             value={formData.sujet}
             onChange={handleChange}
             placeholder="Votre sujet"
-            className="border rounded p-2 px-6 w-full h-12 text-md"
+            className="border rounded-lg p-2 px-3 w-full h-12 text-md"
             required
           />
         </div>
         <div>
           <label
-            className="font-semibold text-2xl lg:text-[14px] sm:text-2xl"
+            className="font-semibold lg:text-[14px]"
             htmlFor="message"
           >
             Votre Message
@@ -101,14 +103,14 @@ export const ContactForm = () => {
             value={formData.message}
             onChange={handleChange}
             placeholder="Votre message"
-            className="border rounded p-2 px-6 w-full"
+            className="border rounded-lg p-2 pt-3 px-3 w-full"
             required
           ></textarea>
         </div>
-        <div className="flex justify-between mt-6 items-center">
+        <div className="flex justify-between mt-4 items-center">
           <button
             type="submit"
-            className="px-6 py-2 bg-primary text-white rounded"
+            className="px-6 py-2 bg-primary text-white rounded-lg"
             disabled={loading}
           >
             {loading ? "Envoi..." : "Envoyer"}

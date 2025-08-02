@@ -62,7 +62,7 @@ export default function Home() {
           <Navigation isTransparent={isHomeVisible} />
         </header>
         <Layout isDisplayBreakCrumbs={false}>
-          <Container className="space-y-6 relative overflow-hidden">
+          <Container className="space-y-6 relative">
             <div id="home" className="fade-in">
               <LandingPageContainer />
             </div>
@@ -75,7 +75,7 @@ export default function Home() {
             <div id="portfolio" className="">
               <PortfolioContainer />
             </div>
-            <div id="contact" className="fade-in">
+            <div id="contact" className="fade-in mb-4">
               <ContactView />
             </div>
           </Container>
