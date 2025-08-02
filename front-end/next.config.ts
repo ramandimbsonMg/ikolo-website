@@ -1,15 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: 'export',
-
-  images: {
-    unoptimized: true, // Désactive l'optimisation d'images
-  },
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // ❌ PAS de output: 'export'
   reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
   eslint: {
-    ignoreDuringBuilds: true, // Désactiver les erreurs ESLint lors de la build
+    ignoreDuringBuilds: true,
   },
 };
 
-module.exports= nextConfig;
+module.exports = nextConfig;
