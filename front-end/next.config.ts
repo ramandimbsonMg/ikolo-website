@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "export", // ✅ pour générer un site statique compatible Netlify
+  output: "export", // ✅ export statique
   images: {
-    unoptimized: true, // ✅ pour corriger l’erreur avec next export
+    unoptimized: true,
   },
 };
 
