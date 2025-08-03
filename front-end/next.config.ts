@@ -1,13 +1,9 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ❌ PAS de output: 'export'
   reactStrictMode: true,
+  output: "export", // ✅ pour générer un site statique compatible Netlify
   images: {
-    unoptimized: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
+    unoptimized: true, // ✅ pour corriger l’erreur avec next export
   },
 };
 
