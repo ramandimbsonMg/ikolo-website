@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server";
+import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import QRCode from "qrcode";
 
-export async function POST(req: Request) {
-  const body = await req.json();
-  const { nom, email, sujet, message } = body;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Méthode non autorisée" });
+  }
+
+  const { nom, email, sujet, message } = req.body;
 
   try {
-    // QR Code content
     const contactInfo = `
 Nom : Ramandimbson Espoir
 Téléphone : +261 34 00 000 00
@@ -23,7 +28,6 @@ Instagram : https://instagram.com/ramandimbson
       margin: 1,
     });
 
-    // Configurer le transport d’email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -32,7 +36,6 @@ Instagram : https://instagram.com/ramandimbson
       },
     });
 
-    // Format date/heure pour l’email
     const now = new Date();
     const date = now.toLocaleDateString("fr-FR");
     const time = now.toLocaleTimeString("fr-FR", {
@@ -40,7 +43,6 @@ Instagram : https://instagram.com/ramandimbson
       minute: "2-digit",
     });
 
-    // Email pour TOI
     const htmlContent = `
       <div style="max-width: 650px; margin: auto; padding: 20px; font-family: sans-serif;">
         <h2 style="text-align: center; color: #0070f3;">📨 Nouveau message via ton portfolio</h2>
@@ -57,7 +59,6 @@ Instagram : https://instagram.com/ramandimbson
       </div>
     `;
 
-    // Email de confirmation pour l’expéditeur
     const confirmationHtml = `
       <div style="max-width: 380px; margin: 30px auto; font-family: Arial, sans-serif; background: #fff;">
         <div style="border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden;">
@@ -82,7 +83,6 @@ Instagram : https://instagram.com/ramandimbson
       </div>
     `;
 
-    // Envoi du message à TOI
     await transporter.sendMail({
       from: `"${nom}" <${email}>`,
       to: process.env.EMAIL_RECEIVER || process.env.EMAIL_USER,
@@ -90,7 +90,6 @@ Instagram : https://instagram.com/ramandimbson
       html: htmlContent,
     });
 
-    // Envoi du message à l’expéditeur
     await transporter.sendMail({
       from: `"Ramandimbson Espoir" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -98,22 +97,16 @@ Instagram : https://instagram.com/ramandimbson
       html: confirmationHtml,
     });
 
-    return NextResponse.json(
-      {
-        message: "✅ Email envoyé avec succès ! Merci pour votre message.",
-        sent: true,
-      },
-      { status: 200 }
-    );
+    return res.status(200).json({
+      message: "✅ Email envoyé avec succès ! Merci pour votre message.",
+      sent: true,
+    });
   } catch (error) {
     console.error("Erreur email:", error);
-    return NextResponse.json(
-      {
-        message:
-          "❌ Une erreur est survenue lors de l'envoi. Merci de réessayer plus tard.",
-        sent: false,
-      },
-      { status: 500 }
-    );
+    return res.status(500).json({
+      message:
+        "❌ Une erreur est survenue lors de l'envoi. Merci de réessayer plus tard.",
+      sent: false,
+    });
   }
 }
