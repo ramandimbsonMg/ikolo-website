@@ -1,6 +1,6 @@
+// next.config.js
 const nextConfig = {
   reactStrictMode: true,
-  output: "export", // ✅ export statique
   images: {
     unoptimized: true,
   },
