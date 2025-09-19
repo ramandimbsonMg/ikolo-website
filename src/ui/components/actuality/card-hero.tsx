@@ -34,14 +34,14 @@ export function CardHeroActuality({ className }: CardHeroActualityProps) {
       }`}
     >
       {/* Titre et description */}
-      <h2 className="text-primary-800 font-bold text-4xl font-serif">
+      <h2 className="text-primary-800 font-bold text-2xl lg:text-4xl font-serif">
         {title}
       </h2>
       <p className="text-primary-800 text-sm md:text-base">{description}</p>
 
       {/* Bouton */}
       <div className="pt-10">
-        <button className="bg-primary-500 text-white px-4 pt-4 pb-4 text-lg font-bold rounded-full rounded-bl-none">
+        <button className="bg-primary-500 text-white px-4 lg:pt-4 lg:pb-4 pt-2 pb-2 lg:text-lg font-bold rounded-full rounded-bl-none">
           {buttonText}
         </button>
       </div>
@@ -52,9 +52,9 @@ export function CardHeroActuality({ className }: CardHeroActualityProps) {
           <a
             key={network.name}
             href="#"
-            className="w-12 h-12 flex items-center justify-center bg-primary-500/50 rounded-full rounded-bl-none text-white hover:bg-green-600 transition-colors"
+            className="lg:w-12 lg:h-12 w-8 h-8 flex items-center justify-center bg-primary-500/50 rounded-full rounded-bl-none text-white hover:bg-green-600 transition-colors"
           >
-            <img src={network.icon} alt={network.name} className="w-8 h-8" />
+            <img src={network.icon} alt={network.name} className="lg:w-8 lg:h-8 w-5 h-5" />
           </a>
         ))}
       </div>

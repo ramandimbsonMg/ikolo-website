@@ -59,7 +59,7 @@ export const AboutSections = () => {
       </div>
 
       <div className="lg:col-span-8 lg:pt-0 pt-6">
-        <div className="lg:grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-2 px-4 lg:px-0 max-w-7xl mx-auto lg:space-y-0 space-y-2">
+        <div className="lg:grid grid-cols-1 md:grid-cols-2 lg:gap-2 lg:px-0 max-w-7xl mx-auto lg:space-y-0 space-y-2">
           {sections.map((section, index) => (
             <div
               key={index}

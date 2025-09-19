@@ -59,19 +59,19 @@ export function HeroActuality() {
 
       {/* Contenu */}
       <div className="lg:grid px-3 lg:grid-cols-12 mx-auto max-w-7xl relative z-20 pb-6">
-        <div className="lg:col-span-7 max-w-4xl mx-auto px-6 mt-10">
-          <p className="mt-4 text-lg md:text-xl bg-white pt-2 pb-2 px-4 rounded-lg rounded-bl-none text-gray-800 inline-block">
+        <div className="lg:col-span-7 lg:max-w-4xl mx-auto px-6 lg:mt-10 mt-2">
+          <p className="mt-4 lg:text-lg bg-white pt-2 pb-2 px-4 rounded-lg rounded-bl-none text-gray-800 inline-block">
             {lang === "FR"
               ? "ONG MADA SINK MAINTSO : Environnement & développement durable"
               : "MADA SINK MAINTSO ONG: Environment & Sustainable Development"}
           </p>
           <div className="space-y-1">
-            <h1 className="mt-6 text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
+            <h1 className="mt-6 text-3xl lg:text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
               {lang === "FR"
                 ? "Luttons ensemble contre l’injustice"
                 : "Let’s fight together against injustice"}
             </h1>
-            <h1 className="mt-6 text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
+            <h1 className="mt-6 text-3xl lg:text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
               {lang === "FR"
                 ? "et pour un avenir équitable."
                 : "and for a fair future."}
