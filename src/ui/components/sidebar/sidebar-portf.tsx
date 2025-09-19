@@ -7,7 +7,6 @@ import { Mail, Github, Download, Phone } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "../ui/button";
 import { AiOutlineLinkedin } from "react-icons/ai";
-import { ProfileSidebar } from "../profile/profile.header";
 
 interface SidebarProps {
   projectss: Project[];
@@ -22,10 +21,6 @@ export default function SidebarPorfolio({ projectss, className }: SidebarProps) 
         className
       )}
     >
-      {/* Profil rapide */}
-      <CardContent className="flex flex-col items-center text-center">
-        <ProfileSidebar />
-      </CardContent>
 
       {/* Contact rapide */}
       <Card className="border border-gray-200 shadow-sm hover:shadow-md transition">

@@ -9,20 +9,20 @@ import {
   AiOutlineGlobal,
   AiOutlineSearch,
 } from "react-icons/ai";
-
+ 
 const navItems = [
   { name: "Accueil", path: "/" },
-  { name: "À propos", path: "/about" },
-  { name: "Projets", path: "/projets" },
-  { name: "Mangroves", path: "/mangroves" },
-  { name: "Forêts", path: "/forets" },
-  { name: "Santé & Humanitaire", path: "/sante-humanitaire" },
-  { name: "Actualités", path: "/actualites" },
-  { name: "Événements", path: "/evenements" },
-  { name: "Galerie", path: "/galerie" },
-  { name: "Soutenir", path: "/soutenir" },
-  { name: "Contact", path: "/contact" },
-  { name: "Mentions légales", path: "/mentions-legales" },
+  { name: "À propos", path: "about" },
+  { name: "Projets", path: "projets" },
+  { name: "Mangroves", path: "mangroves" },
+  { name: "Forêts", path: "forets" },
+  { name: "Santé & Humanitaire", path: "sante-humanitaire" },
+  { name: "Actualités", path: "actualites" },
+  { name: "Événements", path: "evenements" },
+  { name: "Galerie", path: "galerie" },
+  { name: "Soutenir", path: "soutenir" },
+  { name: "Contact", path: "contact" },
+  { name: "Mentions légales", path: "mentions-legales" },
 ];
 
 export default function Navigation() {

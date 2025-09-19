@@ -3,9 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Experience, Project } from "@/types/types";
-import ExperienceList from "@/ui/components/experience/experience.list";
-import FormationList from "@/ui/components/formation/formation.list";
-import ProfileHeader from "@/ui/components/profile/profile.header";
 import Sidebar from "@/ui/components/sidebar/sidebar";
 import { Card } from "@/ui/components/ui/card";
 
@@ -67,7 +64,6 @@ export default function LandingPageView() {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4">
         {/* Main Content */}
         <main className="flex-1 space-y-6 mt-10">
-          <ProfileHeader />
           <div>
             {/* Tabs header */}
             <Card className="">
@@ -97,33 +93,7 @@ export default function LandingPageView() {
 
             {/* Tabs content with animation */}
             <div className="relative min-h-[200px] mt-2">
-              <AnimatePresence mode="wait">
-                {activeTab === "experiences" && (
-                  <motion.div
-                    key="experiences"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-4"
-                  >
-                    <ExperienceList experiences={experiences} />
-                  </motion.div>
-                )}
-
-                {activeTab === "formations" && (
-                  <motion.div
-                    key="formations"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-4"
-                  >
-                    <FormationList />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              
             </div>
           </div>
         </main>

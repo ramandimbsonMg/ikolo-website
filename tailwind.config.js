@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         white: "#ffffff",
         primary: {
+          DEFAULT: "#276ed2", // <--- alias qui crée `text-primary`
           50: "#e6f0ff",
           100: "#cce0ff",
           200: "#99c2ff",
