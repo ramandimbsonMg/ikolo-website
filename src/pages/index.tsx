@@ -1,7 +1,7 @@
 "use client";
 
+import { AboutSections } from "@/ui/components/about/about-sections";
 import { HeroActuality } from "@/ui/components/actuality/hero";
-import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
 import Navigation from "@/ui/components/navigation/navigation";
 import { Seo } from "@/ui/components/seo/seo";
@@ -41,9 +41,10 @@ puits de carbone naturels à Madagascar"
           {/* Hero Section */}
           <HeroActuality />
         </div>
-        {/* <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
-            <AproposCard />
-          </div> */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
+          <AboutSections />
+          <hr className="mb-3 mt-3 border border-primary-800" />
+        </div>
       </Layout>
     </>
   );

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -9,39 +10,46 @@ import {
   AiOutlineGlobal,
   AiOutlineSearch,
 } from "react-icons/ai";
- 
+import { useLanguage } from "@/context/language-context";
+
+// ✅ Items avec texte FR/EN
 const navItems = [
-  { name: "Accueil", path: "/" },
-  { name: "À propos", path: "about" },
-  { name: "Projets", path: "projets" },
-  { name: "Mangroves", path: "mangroves" },
-  { name: "Forêts", path: "forets" },
-  { name: "Santé & Humanitaire", path: "sante-humanitaire" },
-  { name: "Actualités", path: "actualites" },
-  { name: "Événements", path: "evenements" },
-  { name: "Galerie", path: "galerie" },
-  { name: "Soutenir", path: "soutenir" },
-  { name: "Contact", path: "contact" },
-  { name: "Mentions légales", path: "mentions-legales" },
+  { nameFR: "Accueil", nameEN: "Home", path: "/" },
+  { nameFR: "À propos", nameEN: "About", path: "/about" },
+  { nameFR: "Projets", nameEN: "Projects", path: "/projets" },
+  { nameFR: "Mangroves", nameEN: "Mangroves", path: "/mangroves" },
+  { nameFR: "Forêts", nameEN: "Forests", path: "/forets" },
+  {
+    nameFR: "Santé & Humanitaire",
+    nameEN: "Health & Humanitarian",
+    path: "/sante-humanitaire",
+  },
+  { nameFR: "Actualités", nameEN: "News", path: "/actualites" },
+  { nameFR: "Événements", nameEN: "Events", path: "/evenements" },
+  { nameFR: "Galerie", nameEN: "Gallery", path: "/galerie" },
+  { nameFR: "Soutenir", nameEN: "Support", path: "/soutenir" },
+  { nameFR: "Contact", nameEN: "Contact", path: "/contact" },
+  {
+    nameFR: "Mentions légales",
+    nameEN: "Legal Notice",
+    path: "/mentions-legales",
+  },
 ];
 
 export default function Navigation() {
   const [openMobileNav, setOpenMobileNav] = useState(false);
   const [openResources, setOpenResources] = useState(false);
-  const [lang, setLang] = useState("FR");
   const [showMiniNavbar, setShowMiniNavbar] = useState(true);
-
+  const { lang, setLang } = useLanguage();
   const pathname = usePathname();
 
-  // Détecter scroll pour mini-navbar
+  // Scroll avec seuil pour mini-navbar
   useEffect(() => {
     let lastScrollY = window.scrollY;
+    const delta = 50;
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        setShowMiniNavbar(false);
-      } else {
-        setShowMiniNavbar(true);
-      }
+      if (window.scrollY - lastScrollY > delta) setShowMiniNavbar(false);
+      else if (lastScrollY - window.scrollY > delta) setShowMiniNavbar(true);
       lastScrollY = window.scrollY;
     };
     window.addEventListener("scroll", handleScroll);
@@ -63,11 +71,9 @@ export default function Navigation() {
       <AnimatePresence>
         {showMiniNavbar && (
           <motion.div
-            className="bg-[#faf6f6] py-1 px-28 flex justify-end sticky top-0 z-50"
-            initial={{ y: -40, opacity: 0 }}
+            initial={false}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="bg-[#faf6f6] py-1 px-8 flex justify-end sticky top-0 z-50"
           >
             <div className="flex gap-2 items-center">
               <AiOutlineGlobal className="h-6 w-6" />
@@ -93,8 +99,8 @@ export default function Navigation() {
         )}
       </AnimatePresence>
 
-      {/* Grande Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#faf6f6]">
+      {/* Navbar principale */}
+      <nav className="sticky top-0 z-50 bg-[#faf6f6] shadow-sm">
         <div className="max-w-7xl mx-auto h-20 flex justify-between items-center px-4 lg:px-0">
           {/* Logo */}
           <Link href="/" className="w-20 h-20 flex items-center">
@@ -103,24 +109,20 @@ export default function Navigation() {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-6">
-            <Link
-              href="/"
-              className={`py-2 px-4 rounded text-xl transition ${
-                pathname === "/" ? "text-green-500" : "hover:text-green-500"
-              }`}
-            >
-              {lang === "FR" ? "Qui sommes-nous ?" : "What we do?"}
-            </Link>
-            <Link
-              href="/contact"
-              className={`py-2 px-4 rounded text-xl transition ${
-                pathname === "/contact"
-                  ? "text-green-500"
-                  : "hover:text-green-500"
-              }`}
-            >
-              {lang === "FR" ? "Contact" : "Contact"}
-            </Link>
+            {navItems.slice(0, 2).map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`py-2 px-4 rounded text-xl transition ${
+                  pathname === item.path
+                    ? "text-green-500"
+                    : "hover:text-green-500"
+                }`}
+              >
+                {lang === "FR" ? item.nameFR : item.nameEN}
+              </Link>
+            ))}
+
             <button className="p-3 text-green-500 hover:text-green-700 bg-white shadow-sm rounded hover:bg-green-500">
               <AiOutlineSearch className="h-6 w-6" />
             </button>
@@ -131,11 +133,9 @@ export default function Navigation() {
               className="rounded text-xl flex items-center gap-2"
             >
               {openResources ? (
-                <span className="flex items-center gap-2 border border-green-500 px-4 py-2 rounded text-green-500 hover:bg-green-500 hover:text-white transition hover:font-bold">
-                  <AiOutlineClose className="h-6 w-6" />
-                </span>
+                <AiOutlineClose className="h-6 w-6 text-green-500" />
               ) : (
-                <span className="flex items-center gap-2 border border-green-500 px-4 py-2 rounded text-green-500 hover:bg-green-500 hover:text-white transition hover:font-bold">
+                <span className="flex items-center gap-2 text-green-500">
                   <AiOutlineMenu className="h-6 w-6" />
                   MENU
                 </span>
@@ -159,22 +159,20 @@ export default function Navigation() {
         {/* Mobile Menu */}
         {openMobileNav && (
           <div className="lg:hidden mt-2 flex flex-col gap-2 bg-[#faf6f6] p-4 rounded">
-            <button
-              onClick={() => setOpenResources(true)}
-              className="text-black font-medium py-2 px-4 hover:bg-white/10 rounded text-left"
-            >
-              {lang === "FR" ? "Ressources" : "Resources"}
-            </button>
-            <Link
-              href="/contact"
-              className={`font-medium py-2 px-4 rounded transition ${
-                pathname === "/contact"
-                  ? "text-green-500 font-semibold"
-                  : "text-black hover:text-green-500"
-              }`}
-            >
-              {lang === "FR" ? "Contact" : "Contact"}
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                onClick={() => setOpenMobileNav(false)}
+                className={`font-medium py-2 px-4 rounded transition ${
+                  pathname === item.path
+                    ? "text-green-500 font-semibold"
+                    : "text-black hover:text-green-500"
+                }`}
+              >
+                {lang === "FR" ? item.nameFR : item.nameEN}
+              </Link>
+            ))}
           </div>
         )}
 
@@ -182,7 +180,7 @@ export default function Navigation() {
         <AnimatePresence>
           {openResources && (
             <motion.div
-              className="fixed inset-0 bg-[#faf6f6] z-50 h-screen mt-28"
+              className="fixed inset-0 bg-[#faf6f6] z-50 h-screen mt-28 overflow-auto"
               initial={{ opacity: 0, y: "-100%" }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: "-100%" }}
@@ -191,66 +189,57 @@ export default function Navigation() {
               <div className="mx-auto max-w-7xl mt-14 px-4 lg:px-0">
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-8">
-                    <h1 className="text-6xl">Navigation</h1>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl mt-10">
-                      {navItems.map((item, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex flex-col items-start"
+                    <h1 className="text-4xl font-bold mb-6">
+                      {lang === "FR" ? "Navigation" : "Navigation"}
+                    </h1>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {navItems.map((item) => (
+                        <Link
+                          key={item.path}
+                          href={item.path}
+                          onClick={() => setOpenResources(false)}
+                          className={`text-xl font-semibold transition ${
+                            pathname === item.path
+                              ? "text-green-500"
+                              : "text-black hover:text-green-500"
+                          }`}
                         >
-                          <Link
-                            href={item.path}
-                            onClick={() => setOpenResources(false)}
-                            className={`text-xl font-semibold transition ${
-                              pathname === item.path
-                                ? "text-green-500"
-                                : "text-black hover:text-green-500"
-                            }`}
-                          >
-                            {item.name}
-                          </Link>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Découvrez plus sur {item.name.toLowerCase()}.
-                          </p>
-                        </motion.div>
+                          {lang === "FR" ? item.nameFR : item.nameEN}
+                        </Link>
                       ))}
                     </div>
                   </div>
                   <div className="col-span-4">
-                    <h1 className="text-6xl">À la une</h1>
+                    <h1 className="text-4xl font-bold mb-6">
+                      {lang === "FR" ? "À la une" : "Featured"}
+                    </h1>
                   </div>
                 </div>
 
                 {/* Footer */}
                 <div className="mt-12 border-t border-gray-300 w-full pt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
                   <span>
-                    © {new Date().getFullYear()} ONG MG. Tous droits réservés.
+                    © {new Date().getFullYear()} ONG MG.{" "}
+                    {lang === "FR"
+                      ? "Tous droits réservés."
+                      : "All rights reserved."}
                   </span>
-                  <div className="flex gap-6 mt-2 sm:mt-0">
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="/icons/facebook.svg"
-                        alt="Facebook"
-                        className="w-6 h-6 hover:scale-110 transition"
-                      />
-                    </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="/icons/instagram.svg"
-                        alt="Instagram"
-                        className="w-6 h-6 hover:scale-110 transition"
-                      />
-                    </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="/icons/twitter.svg"
-                        alt="Twitter"
-                        className="w-6 h-6 hover:scale-110 transition"
-                      />
-                    </a>
+                  <div className="flex gap-4 mt-2 sm:mt-0">
+                    <img
+                      src="/icons/facebook.svg"
+                      alt="Facebook"
+                      className="w-6 h-6 hover:scale-110 transition"
+                    />
+                    <img
+                      src="/icons/instagram.svg"
+                      alt="Instagram"
+                      className="w-6 h-6 hover:scale-110 transition"
+                    />
+                    <img
+                      src="/icons/twitter.svg"
+                      alt="Twitter"
+                      className="w-6 h-6 hover:scale-110 transition"
+                    />
                   </div>
                 </div>
               </div>
