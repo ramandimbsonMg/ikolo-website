@@ -44,7 +44,7 @@ export const AboutSections = () => {
   ];
 
   return (
-    <div className="lg:grid lg:grid-cols-12 gap-6">
+    <div className="lg:grid lg:grid-cols-12 lg:gap-6">
       <div className="col-span-4">
         <Typography variant="xlarge" className="text-primary-800 font-semibold">
           {lang === "FR"

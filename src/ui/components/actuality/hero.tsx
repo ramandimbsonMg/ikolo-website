@@ -59,14 +59,14 @@ export function HeroActuality() {
 
       {/* Contenu */}
       <div className="lg:grid px-3 lg:grid-cols-12 mx-auto max-w-7xl relative z-20 pb-6">
-        <div className="lg:col-span-7 lg:max-w-4xl mx-auto px-6 lg:mt-10 mt-2">
-          <p className="mt-4 lg:text-lg bg-white pt-2 pb-2 px-4 rounded-lg rounded-bl-none text-gray-800 inline-block">
+        <div className="lg:col-span-7 lg:max-w-4xl mx-auto lg:px-6 lg:mt-10 mt-2 px-3">
+          <p className="lg:mt-4 mt-2 lg:text-lg bg-white pt-2 pb-2 px-4 rounded-lg rounded-bl-none text-gray-800 inline-block">
             {lang === "FR"
               ? "ONG MADA SINK MAINTSO : Environnement & développement durable"
               : "MADA SINK MAINTSO ONG: Environment & Sustainable Development"}
           </p>
           <div className="space-y-1">
-            <h1 className="mt-6 text-3xl lg:text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
+            <h1 className="lg:mt-6 mt-2 text-3xl lg:text-5xl font-bold bg-green-500/20 rounded-lg rounded-bl-none px-3 pt-3 pb-3 font-serif">
               {lang === "FR"
                 ? "Luttons ensemble contre l’injustice"
                 : "Let’s fight together against injustice"}
@@ -79,7 +79,7 @@ export function HeroActuality() {
           </div>
         </div>
 
-        <CardHeroActuality className="lg:col-span-5 text-center text-green-700 shadow-lg border lg:mt-60 z-10 absolute inset-0 pt-4" />
+        <CardHeroActuality className="lg:col-span-5 text-center text-green-700 shadow-lg border lg:mt-60 z-10 absolute inset-0 pt-4 mt-4" />
       </div>
     </section>
   );

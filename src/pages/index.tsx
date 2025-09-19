@@ -37,7 +37,7 @@ puits de carbone naturels à Madagascar"
       />
       <Navigation />
       <Layout isDisplayBreakCrumbs={false}>
-        <div className="relative min-h-screen flex flex-col">
+        <div className="relative lg:min-h-screen flex flex-col">
           {/* Hero Section */}
           <HeroActuality />
         </div>

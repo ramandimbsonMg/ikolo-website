@@ -29,7 +29,7 @@ export function CardHeroActuality({ className }: CardHeroActualityProps) {
 
   return (
     <div
-      className={`relative bg-white dark:bg-gray-800 px-6 pt-20 pb-4 space-y-4 rounded-lg rounded-bl-none overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-b-4 border-b-blue-500 group ${
+      className={`relative bg-white dark:bg-gray-800 px-6 lg:pt-20 pb-4 space-y-4 rounded-lg rounded-bl-none overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-b-4 border-b-blue-500 group ${
         className || ""
       }`}
     >
