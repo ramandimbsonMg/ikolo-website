@@ -1,6 +1,7 @@
 "use client";
 
 import { AboutSections } from "@/ui/components/about/about-sections";
+import { PrioritaireCards } from "@/ui/components/about/prioritaire-section";
 import { HeroActuality } from "@/ui/components/actuality/hero";
 import { Layout } from "@/ui/components/layout/layout";
 import Navigation from "@/ui/components/navigation/navigation";
@@ -43,7 +44,8 @@ puits de carbone naturels à Madagascar"
         </div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
           <AboutSections />
-          <hr className="mb-3 mt-3 border border-primary-800" />
+          <hr className="lg:mb-20 lg:mt-20 mt-4 mb-4 shadow" />
+          <PrioritaireCards />
         </div>
       </Layout>
     </>

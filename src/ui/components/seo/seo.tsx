@@ -12,7 +12,7 @@ export const Seo = ({ title, description }: Props) => {
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/assets/favicon/logo_ong.png" />
+        <link rel="icon" href="/favicon/logo_ong.png" />
       </Head>
     );
 }
