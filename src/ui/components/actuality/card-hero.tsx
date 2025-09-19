@@ -1,0 +1,46 @@
+"use client";
+type CardHeroActualityProps = {
+  className?: string;
+};
+
+const socialNetworks = [
+  { name: "facebook", icon: "/assets/icons/facebook.png" },
+  { name: "instagram", icon: "/assets/icons/instagram.png" },
+  { name: "twitter", icon: "/assets/icons/twitter.png" },
+];
+
+export function CardHeroActuality({ className }: CardHeroActualityProps) {
+  return (
+    <div
+      className={`relative bg-white dark:bg-gray-800 px-6 pt-20 pb-4 space-y-4 rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-b-4 border-b-blue-500 group ${
+        className || ""
+      }`}
+    >
+      {/* Titre et description */}
+      <h2 className="text-primary-800 font-bold text-4xl font-serif">
+        Là où la conservation prend son envol
+      </h2>
+      <p className="text-primary-800 text-sm md:text-base">
+        Découvrez les meilleures réserves naturelles pour la migration des
+        oiseaux en automne.
+      </p>
+      <div className="pt-10">
+        <button className="bg-primary-500 text-white px-4 pt-4 pb-4 text-lg font-bold">
+          Trouver des migrations
+        </button>
+      </div>
+      {/* ✅ Social Icons qui apparaissent au hover du parent */}
+      <div className="absolute bottom-20 right-3 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {socialNetworks.map((network) => (
+          <a
+            key={network.name}
+            href="#"
+            className="w-12 h-12 flex items-center justify-center bg-primary-500/50 rounded-full rounded-bl-none text-white hover:bg-green-600 transition-colors"
+          >
+            <img src={network.icon} alt={network.name} className="w-8 h-8" />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
