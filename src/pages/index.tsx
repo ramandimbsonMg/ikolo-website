@@ -1,15 +1,11 @@
-"use client";
 
-import { AboutSections } from "@/ui/components/about/about-sections";
-import { PrioritaireCards } from "@/ui/components/about/prioritaire-section";
-import { HeroActuality } from "@/ui/components/actuality/hero";
+import { ContainerContenu } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
-import Navigation from "@/ui/components/navigation/navigation";
 import { Seo } from "@/ui/components/seo/seo";
+import { LandingPageContainer } from "@/ui/module/landing-page/landing-page.container";
 import { useEffect } from "react";
 
 export default function Home() {
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -31,23 +27,17 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="ONG MADA SINK MAINTSO "
-        description="%s | une Organisation Non Gouvernementale malgache œuvrant
-pour la protection de l’environnement, le développement rural durable et la création de
-puits de carbone naturels à Madagascar"
+        title="Ikolo | Beauté naturelle malgache"
+        description="Produits cosmétiques à base de plantes de Madagascar."
       />
-      <Navigation />
-      <Layout isDisplayBreakCrumbs={false}>
-        <div className="relative lg:min-h-screen flex flex-col">
-          {/* Hero Section */}
-          <HeroActuality />
-        </div>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
-          <AboutSections />
-          <hr className="lg:mb-20 lg:mt-20 mt-4 mb-4 shadow" />
-          <PrioritaireCards />
-        </div>
-      </Layout>
+
+      <div className="bg-white bg-opacity-50">
+        <Layout isDisplayBreakCrumbs={false}>
+          <ContainerContenu>
+            <LandingPageContainer />
+          </ContainerContenu>
+        </Layout>
+      </div>
     </>
   );
 }

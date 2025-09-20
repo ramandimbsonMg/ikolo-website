@@ -1,17 +1,20 @@
-export interface Experience {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  start: string;
-  end: string;
-  summary: string;
-  tags: string[];
+// src/types/types.ts
+
+// Exemple pour les utilisateurs
+export interface UserType {
+  id: string;
+  name: string;
+  email: string;
+  role?: "admin" | "user";
 }
 
-export interface Project {
-  id: number;
-  name: string;
-  slug?: string;
+// Exemple pour une vidéo YouTube
+export interface YoutubeVideoType {
+  id: string;
+  title: string;
+  url: string;
+  thumbnail?: string;
+  description?: string;
 }
- 
+
+// Tu peux ajouter d'autres types ici selon besoin

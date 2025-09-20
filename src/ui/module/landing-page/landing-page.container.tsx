@@ -1,9 +1,9 @@
-import LandingPageView from "./landing-page..view";
+import { LandignPageView } from "./landing-page..view"
 
 export const LandingPageContainer = () => {
-    return (
-      <>
-        <LandingPageView />
-      </>
-    );
+    return ( 
+        <>
+            <LandignPageView products={[]} />
+        </>
+     )
 }

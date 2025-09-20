@@ -1,179 +1,111 @@
 "use client";
 
-import { Card, CardContent, CardTitle } from "@/ui/components/ui/card";
-import { Badge } from "@/ui/components/ui/badge";
-import { Project } from "@/types/types";
-import { Mail, Github, Download, Phone } from "lucide-react";
-import clsx from "clsx";
-import { Button } from "../ui/button";
-import { AiOutlineLinkedin } from "react-icons/ai";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  AiFillHome,
+  AiOutlineUser,
+  AiOutlineBarChart,
+  AiOutlineSetting,
+  AiOutlineLogout,
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineMail,
+} from "react-icons/ai";
 
-interface SidebarProps {
-  projects: Project[];
-  className?: string;
-}
+export default function Sidebar() {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
-export default function Sidebar({ projects, className }: SidebarProps) {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/connexion/acs-zone");
+  };
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const menuItems = [
+    { href: "/", label: "Accueil", icon: <AiFillHome size={20} /> },
+    {
+      href: "/acs-zone/etudiant",
+      label: "Étudiants",
+      icon: <AiOutlineUser size={20} />,
+    },
+    // {
+    //   href: "/stats",
+    //   label: "Statistiques",
+    //   icon: <AiOutlineBarChart size={20} />,
+    // },
+    {
+      href: "/acs-zone/newsletter",
+      label: "Newsletter",
+      icon: <AiOutlineMail size={20} />,
+    },
+    {
+      href: "/acs-zone/settings",
+      label: "Paramètres",
+      icon: <AiOutlineSetting size={20} />,
+    },
+  ];
+
   return (
-    <aside
-      className={clsx(
-        "w-full md:w-1/3 space-y-5 lg:mt-10 sticky top-10 self-start lg:px-0 px-4",
-        className
+    <>
+      {/* Bouton hamburger pour mobile */}
+      <button
+        className="fixed top-4 left-4 z-50 text-gray-900 bg-white p-2 rounded-md shadow-md md:hidden"
+        onClick={toggleSidebar}
+      >
+        {isOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-screen w-60 bg-gray-900 text-white flex flex-col z-40 transform transition-transform duration-300
+          ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:static md:flex`}
+      >
+        {/* Titre */}
+        <div className="p-6 text-2xl font-bold border-b border-gray-700">
+          🎓 School Admin
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-3">
+          {menuItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex items-center gap-3 p-2 rounded hover:bg-gray-700"
+              onClick={() => setIsOpen(false)}
+            >
+              {item.icon} {item.label}
+            </Link>
+          ))}
+
+          {/* Bouton déconnexion */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-2 mt-6 rounded hover:bg-red-600 bg-red-500 text-white font-semibold"
+          >
+            <AiOutlineLogout size={20} /> Déconnexion
+          </button>
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
+          © 2025 ACS
+        </div>
+      </aside>
+
+      {/* Overlay pour mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
       )}
-    >
-      {/* Projet Mis’era */}
-      <Card className="border border-gray-200 shadow-sm hover:shadow-md transition">
-        <CardContent className="items-center text-center">
-          <img
-            src="assets/images/portfolio/Misera/actu.png"
-            alt="Projet Mis’era"
-            className="w-full h-28 object-cover"
-          />
-          <h2 className="mt-4 text-xl font-bold text-gray-800 dark:text-white">Mis’era</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Plateforme Social-Commerce – Vendre, partager et interagir autour de
-            produits
-          </p>
-          <hr className="mt-2 mb-2 mx-4" />
-          <p className="text-sm text-gray-500 mt-1">
-            Développement fullstack avec Django, React et Next.js. UI moderne et
-            responsive.
-          </p>
-          <br />
-          <p className="text-xs text-gray-400 mt-1">
-            Antananarivo, Madagascar | Projet personnel
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Contact rapide */}
-      <Card className="border border-gray-200 sticky top-10 shadow-sm hover:shadow-md transition">
-        <CardContent>
-          <CardTitle>Contact rapide</CardTitle>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {/* Email */}
-            <a
-              href="mailto:contact@misera.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Mail size={16} /> Email
-              </Button>
-            </a>
-
-            {/* Téléphone */}
-            <a href="tel:+261349052467">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Phone /> Tel
-              </Button>
-            </a>
-
-            {/* LinkedIn */}
-            <a
-              href="https://www.linkedin.com/in/tonprofil"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <AiOutlineLinkedin size={16} /> LinkedIn
-              </Button>
-            </a>
-
-            {/* GitHub */}
-            <a
-              href="https://github.com/ramandimbsonMg"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Github size={16} /> GitHub
-              </Button>
-            </a>
-
-            {/* Téléchargement CV */}
-            <a
-              href="/assets/pdf/Ramandimbson_Espoir_CV.pdf"
-              download="Ramandimbson_Espoir_CV.pdf"
-              className=""
-            >
-              <Button
-                size="sm"
-                className="flex items-center w-60 gap-1 text-white"
-              >
-                <Download size={16} /> CV
-              </Button>
-            </a>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Compétences */}
-      <Card className=" border border-gray-200">
-        <CardContent>
-          <CardTitle>Compétences</CardTitle>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {[
-              { name: "Python", url: "https://www.python.org/" },
-              { name: "Django", url: "https://www.djangoproject.com/" },
-              { name: "Odoo", url: "https://www.odoo.com/" },
-              { name: "React", url: "https://react.dev/" },
-              { name: "Next.js", url: "https://nextjs.org/" },
-              { name: "TailwindCSS", url: "https://tailwindcss.com/" },
-              { name: "PostgreSQL", url: "https://www.postgresql.org/" },
-              { name: "Figma", url: "https://www.figma.com/" },
-              { name: "Docker", url: "https://www.docker.com/" },
-            ].map((skill) => (
-              <a
-                key={skill.name}
-                href={skill.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Badge
-                  variant="outline"
-                  className="border-primary text-primary-600 text-sm px-3 py-1 hover:bg-primary-50 hover:underline transition"
-                >
-                  {skill.name}
-                </Badge>
-              </a>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Projets récents */}
-      <Card className=" border border-gray-200">
-        <CardContent>
-          <CardTitle>Projets récents</CardTitle>
-          <ul className="mt-3 space-y-2 text-gray-700 dark:text-white dark:hover:text-gray-700">
-            {projects.map((p) => (
-              <li
-                key={p.id}
-                className="p-2 rounded-md hover:bg-gray-100 transition text-sm"
-              >
-                {p.name}
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    </aside>
+    </>
   );
 }

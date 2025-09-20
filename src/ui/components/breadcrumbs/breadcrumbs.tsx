@@ -6,7 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Container } from "../container/container";
 import Link from "next/link";
 
-export const Breadcrumbs = () => {
+interface Props{
+    className?: string;
+}
+
+export const Breadcrumbs = ({className}:Props) => {
     const router = useRouter();
     const asPath = router.asPath;
     const segments = asPath.split("/");
@@ -22,7 +26,7 @@ export const Breadcrumbs = () => {
                 <Typography
                     variant="small"
                     component="span"
-                    className={clsx(
+                    className={clsx( className,
                         path !== lastSegment ? "text-gray" : "text-gray-950", "font-medium",
                         "capitalize hover:text-gray-950 animate"
                     )}
@@ -31,7 +35,7 @@ export const Breadcrumbs = () => {
                 </Typography>
 
                 {path !== lastSegment && (
-                    <Typography variant="small" component="span" className="ml-2 text-gray">
+                    <Typography variant="small" component="span" className={clsx("ml-2 text-gray", className)}>
                         /
                     </Typography>
                 )}

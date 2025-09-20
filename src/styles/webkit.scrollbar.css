@@ -1,0 +1,44 @@
+
+@media(min-width:7001px) {
+
+  /* Style global pour toutes les barres de défilement */
+  ::-webkit-scrollbar {
+    width: 0px;
+    /* Largeur de la scrollbar */
+    height: 0px;
+    /* Hauteur de la scrollbar (scroll horizontal) */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #4ddae7;
+    /* Couleur de la barre (thumb) */
+    /* border-radius: 5px; */
+    /* Coins arrondis */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #eef2ff;
+    /* Couleur de la piste (track) */
+  }
+}
+
+@media(max-width: 700px) {
+  ::-webkit-scrollbar {
+    width: 0px;
+    /* Largeur de la scrollbar */
+    height: 0px;
+    /* Hauteur de la scrollbar (scroll horizontal) */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #818cf8;
+    /* Couleur de la barre (thumb) */
+    /* border-radius: 5px; */
+    /* Coins arrondis */
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #eef2ff;
+    /* Couleur de la piste (track) */
+  }
+}

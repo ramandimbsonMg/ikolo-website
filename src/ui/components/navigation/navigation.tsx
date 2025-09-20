@@ -1,252 +1,134 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  AiOutlineMenu,
-  AiOutlineClose,
-  AiOutlineGlobal,
-  AiOutlineSearch,
-} from "react-icons/ai";
-import { useLanguage } from "@/context/language-context";
-
-// ✅ Items avec texte FR/EN
-const navItems = [
-  { nameFR: "Accueil", nameEN: "Home", path: "/" },
-  { nameFR: "À propos", nameEN: "About", path: "/about" },
-  { nameFR: "Projets", nameEN: "Projects", path: "/projets" },
-  { nameFR: "Mangroves", nameEN: "Mangroves", path: "/mangroves" },
-  { nameFR: "Forêts", nameEN: "Forests", path: "/forets" },
-  {
-    nameFR: "Santé & Humanitaire",
-    nameEN: "Health & Humanitarian",
-    path: "/sante-humanitaire",
-  },
-  { nameFR: "Actualités", nameEN: "News", path: "/actualites" },
-  { nameFR: "Événements", nameEN: "Events", path: "/evenements" },
-  { nameFR: "Galerie", nameEN: "Gallery", path: "/galerie" },
-  { nameFR: "Soutenir", nameEN: "Support", path: "/soutenir" },
-  { nameFR: "Contact", nameEN: "Contact", path: "/contact" },
-  {
-    nameFR: "Mentions légales",
-    nameEN: "Legal Notice",
-    path: "/mentions-legales",
-  },
-];
+import Image from "next/image";
+import { useState } from "react";
 
 export default function Navigation() {
-  const [openMobileNav, setOpenMobileNav] = useState(false);
-  const [openResources, setOpenResources] = useState(false);
-  const [showMiniNavbar, setShowMiniNavbar] = useState(true);
-  const { lang, setLang } = useLanguage();
-  const pathname = usePathname();
-
-  // Scroll avec seuil pour mini-navbar
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const delta = 50;
-    const handleScroll = () => {
-      if (window.scrollY - lastScrollY > delta) setShowMiniNavbar(false);
-      else if (lastScrollY - window.scrollY > delta) setShowMiniNavbar(true);
-      lastScrollY = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Fermer menu mobile au resize desktop
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 960) setOpenMobileNav(false);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      {/* Mini-navbar */}
-      <AnimatePresence>
-        {showMiniNavbar && (
-          <motion.div
-            initial={false}
-            animate={{ y: 0, opacity: 1 }}
-            className="bg-[#faf6f6] py-1 px-8 flex justify-end sticky top-0 z-50"
-          >
-            <div className="flex gap-2 items-center">
-              <AiOutlineGlobal className="h-6 w-6" />
-              <button
-                onClick={() => setLang("FR")}
-                className={`px-2 py-1 rounded text-sm transition ${
-                  lang === "FR" ? "text-green-500" : "hover:text-gray-600"
-                }`}
-              >
-                Français
-              </button>
-              <span className="border-t border h-4 mt-1.5"></span>
-              <button
-                onClick={() => setLang("EN")}
-                className={`px-2 py-1 rounded text-sm transition ${
-                  lang === "EN" ? "text-green-500" : "hover:text-gray-600"
-                }`}
-              >
-                English
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <header className="bg-secondary/10 backdrop-blur-lg h-[80px] shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-6 py-2 flex items-center justify-between">
+        {/* Logo + texte */}
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/assets/images/logo/logo_ikolo~2.png"
+            alt="Ikolo"
+            width={70}
+            height={70}
+            className="rounded-full object-cover"
+          />
+          {/* <div>
+            <h1 className="font-bold text-xl tracking-wide text-green-800">
+              Ikolo
+            </h1>
+            <p className="text-xs text-gray-500 italic">
+              La beauté enracinée dans la nature malgache
+            </p>
+          </div> */}
+        </Link>
 
-      {/* Navbar principale */}
-      <nav className="sticky top-0 z-50 bg-[#faf6f6] shadow-sm">
-        <div className="max-w-7xl mx-auto h-20 flex justify-between items-center px-4 lg:px-0">
-          {/* Logo */}
-          <Link href="/" className="w-20 h-20 flex items-center">
-            <img src="/assets/images/logo/logo_ong.png" alt="logo ong" />
+        {/* menu desktop */}
+        <nav className="hidden md:flex gap-8 items-center font-medium">
+          <Link
+            href="/products"
+            className="hover:text-green-700 transition-colors"
+          >
+            Produits
           </Link>
-
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-6">
-            {navItems.slice(0, 2).map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`py-2 px-4 rounded text-xl transition ${
-                  pathname === item.path
-                    ? "text-green-500"
-                    : "hover:text-green-500"
-                }`}
-              >
-                {lang === "FR" ? item.nameFR : item.nameEN}
-              </Link>
-            ))}
-
-            <button className="p-3 text-green-500 hover:text-green-700 bg-white shadow-sm rounded hover:bg-green-500">
-              <AiOutlineSearch className="h-6 w-6" />
-            </button>
-
-            {/* MENU Button */}
-            <button
-              onClick={() => setOpenResources(!openResources)}
-              className="rounded text-xl flex items-center gap-2"
-            >
-              {openResources ? (
-                <AiOutlineClose className="h-6 w-6 text-green-500" />
-              ) : (
-                <span className="flex items-center gap-2 text-green-500">
-                  <AiOutlineMenu className="h-6 w-6" />
-                  MENU
-                </span>
-              )}
-            </button>
-          </div>
-
-          {/* Mobile Button */}
-          <button
-            className="lg:hidden text-green-500 hover:text-green-700"
-            onClick={() => setOpenMobileNav(!openMobileNav)}
+          <Link href="/shop" className="hover:text-green-700 transition-colors">
+            Boutique
+          </Link>
+          <Link href="/blog" className="hover:text-green-700 transition-colors">
+            blog
+          </Link>
+          <Link
+            href="/about"
+            className="hover:text-green-700 transition-colors"
           >
-            {openMobileNav ? (
-              <AiOutlineClose className="h-6 w-6" />
-            ) : (
-              <AiOutlineMenu className="h-6 w-6" />
-            )}
-          </button>
-        </div>
+            À propos
+          </Link>
+          <Link
+            href="/contact"
+            className="hover:text-green-700 transition-colors"
+          >
+            Contact
+          </Link>
+          <Link
+            href="/connexion"
+            className="px-5 py-3 bg-green-700 text-white rounded-full shadow hover:bg-green-800 transition"
+          >
+            Se connecter
+          </Link>
+        </nav>
 
-        {/* Mobile Menu */}
-        {openMobileNav && (
-          <div className="lg:hidden mt-2 flex flex-col gap-2 bg-[#faf6f6] p-4 rounded">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                onClick={() => setOpenMobileNav(false)}
-                className={`font-medium py-2 px-4 rounded transition ${
-                  pathname === item.path
-                    ? "text-green-500 font-semibold"
-                    : "text-black hover:text-green-500"
-                }`}
-              >
-                {lang === "FR" ? item.nameFR : item.nameEN}
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Fullscreen Resources Menu */}
-        <AnimatePresence>
-          {openResources && (
-            <motion.div
-              className="fixed inset-0 bg-[#faf6f6] z-50 h-screen mt-28 overflow-auto"
-              initial={{ opacity: 0, y: "-100%" }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: "-100%" }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+        {/* bouton mobile */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden text-green-800"
+        >
+          {open ? (
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="transition"
             >
-              <div className="mx-auto max-w-7xl mt-14 px-4 lg:px-0">
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-8">
-                    <h1 className="text-4xl font-bold mb-6">
-                      {lang === "FR" ? "Navigation" : "Navigation"}
-                    </h1>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {navItems.map((item) => (
-                        <Link
-                          key={item.path}
-                          href={item.path}
-                          onClick={() => setOpenResources(false)}
-                          className={`text-xl font-semibold transition ${
-                            pathname === item.path
-                              ? "text-green-500"
-                              : "text-black hover:text-green-500"
-                          }`}
-                        >
-                          {lang === "FR" ? item.nameFR : item.nameEN}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="col-span-4">
-                    <h1 className="text-4xl font-bold mb-6">
-                      {lang === "FR" ? "À la une" : "Featured"}
-                    </h1>
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="mt-12 border-t border-gray-300 w-full pt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
-                  <span>
-                    © {new Date().getFullYear()} ONG MG.{" "}
-                    {lang === "FR"
-                      ? "Tous droits réservés."
-                      : "All rights reserved."}
-                  </span>
-                  <div className="flex gap-4 mt-2 sm:mt-0">
-                    <img
-                      src="/icons/facebook.svg"
-                      alt="Facebook"
-                      className="w-6 h-6 hover:scale-110 transition"
-                    />
-                    <img
-                      src="/icons/instagram.svg"
-                      alt="Instagram"
-                      className="w-6 h-6 hover:scale-110 transition"
-                    />
-                    <img
-                      src="/icons/twitter.svg"
-                      alt="Twitter"
-                      className="w-6 h-6 hover:scale-110 transition"
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+              <path
+                d="M6 6L18 18M6 18L18 6"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          ) : (
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="transition"
+            >
+              <path
+                d="M3 6h18M3 12h18M3 18h18"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
           )}
-        </AnimatePresence>
-      </nav>
-    </>
+        </button>
+      </div>
+
+      {/* menu mobile */}
+      {open && (
+        <div className="md:hidden bg-secondary-50 border-t shadow-inner animate-slideDown">
+          <div className="px-6 py-4 flex flex-col gap-4 font-medium">
+            <Link href="/products" className="hover:text-green-700">
+              Produits
+            </Link>
+            <Link href="/shop" className="hover:text-green-700">
+              Boutique
+            </Link>
+            <Link href="/blog" className="hover:text-green-700">
+              Actualités
+            </Link>
+            <Link href="/about" className="hover:text-green-700">
+              À propos
+            </Link>
+            <Link href="/contact" className="hover:text-green-700">
+              Contact
+            </Link>
+            <Link
+              href="/connexion"
+              className="px-4 py-2 bg-green-700 text-white rounded-full shadow hover:bg-green-800 transition"
+            >
+              Se connecter
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

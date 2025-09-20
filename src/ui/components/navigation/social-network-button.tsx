@@ -17,9 +17,8 @@ export const SocialNetworkButton = ({
     const socialList = footerReseauLinks.map((socialNetwork) => (
         <Button
             key={uuidv4()}
-            variant="ico"
-            size="very-small"
-            iconTheme={theme}
+            size="small"
+            variant="outline"
             icon={{icon: socialNetwork.icon ? socialNetwork.icon : RiFacebookFill}}
             baseUrl={socialNetwork.baseUrl}
             LinkType={socialNetwork.type}

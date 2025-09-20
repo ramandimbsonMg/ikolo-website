@@ -7,34 +7,43 @@ interface Props {
   href: string;
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
 }
 
 export const ActiveLink = ({ href, children, className }: Props) => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const isActive: boolean = useMemo(() => {
-        return router.pathname === href;
-    }, [router.pathname, href]);
-    return (
-        <Link
-            href={href}
-            className={clsx(isActive && "text-primary font-medium border-b-2 border-b-primary animate items-center flex w-full", " border-gray-200 hover:text-primary items-center h-14 flex w-full", className)}>
-            {children}
-        </Link>
-    )
-}
+  const isActive: boolean = useMemo(() => {
+    return router.pathname === href;
+  }, [router.pathname, href]);
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        isActive &&
+          "text-primary font-medium px-2 animate justify-center items-center flex",
+        "px-2 flex hover:text-primary justify-center items-center",
+        className
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
 export const ActiveFooterLink = ({ href, children }: Props) => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const isActive: boolean = useMemo(() => {
-        return router.pathname === href;
-    }, [router.pathname, href]);
-    return (
-        <Link
-            href={href}
-            className={clsx(isActive && "font-medium animate text-primary", "hover:text-primary")}>
-            {children}
-        </Link>
-    )
-}
+  const isActive: boolean = useMemo(() => {
+    return router.pathname === href;
+  }, [router.pathname, href]);
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        isActive && "font-medium animate text-primary",
+        "hover:text-primary text-primary"
+      )}
+    >
+      {children}
+    </Link>
+  );
+};

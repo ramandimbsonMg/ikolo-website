@@ -1,68 +1,51 @@
 import clsx from "clsx";
 
 interface Props {
-  variant?:
-    | "display"
-    | "2xlarge"
-    | "xlarge"
-    | "large"
-    | "medium"
-    | "semimedium"
-    | "small";
+  variant?: "display" | "xlarge" | "2xlarge" | "large" | "medium" | "semimedium" | "small";
   component?: "h1" | "h2" | "h3" | "h4" | "h5" | "div" | "p" | "span";
-  theme?: "black" | "gray" | "white" | "primary" | "secondary";
-  weight?: "regular" | "medium";
+  theme?: "black" | "gray" | "white" | "primary" | "secondary" | "accent";
+  weight?: "regular" | "medium" | "bold";
   className?: string;
-  style?: React.CSSProperties;
   children: React.ReactNode;
 }
 
 export const Typography = ({
   variant = "medium",
   component: Component = "div",
-  theme,
+  theme = "black",
   weight = "regular",
-  style,
   className,
   children,
 }: Props) => {
-  let variantStyles = "";
-  let colorStyles = "";
-
+  let varianStyles = "";
   switch (variant) {
     case "display":
-      variantStyles =
-        "text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]";
+      varianStyles = "lg:text-7xl text-6xl font-extrabold tracking-tight";
       break;
     case "2xlarge":
-      variantStyles =
-        "text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight leading-snug";
+      varianStyles = "lg:text-5xl text-4xl font-bold";
       break;
     case "xlarge":
-      variantStyles =
-        "text-3xl md:text-4xl lg:text-4xl font-semibold tracking-tight leading-snug";
+      varianStyles = "text-3xl font-bold";
       break;
     case "large":
-      variantStyles =
-        "text-2xl md:text-3xl lg:text-3xl font-medium tracking-wide leading-snug";
+      varianStyles = "text-xl font-semibold";
       break;
     case "medium":
-      variantStyles =
-        "text-base md:text-lg lg:text-lg font-medium tracking-wide leading-relaxed";
+      varianStyles = "text-lg";
       break;
     case "semimedium":
-      variantStyles =
-        "text-sm md:text-base lg:text-base font-medium tracking-wide leading-relaxed";
+      varianStyles = "text-md";
       break;
     case "small":
-      variantStyles =
-        "text-xs md:text-sm lg:text-sm font-medium tracking-wide leading-relaxed";
+      varianStyles = "text-sm";
       break;
   }
 
+  let colorStyles = "";
   switch (theme) {
     case "black":
-      colorStyles = "text-primary-900";
+      colorStyles = "text-gray-900";
       break;
     case "gray":
       colorStyles = "text-gray-500";
@@ -76,21 +59,17 @@ export const Typography = ({
     case "secondary":
       colorStyles = "text-secondary";
       break;
+    case "accent":
+      colorStyles = "text-accent";
+      break;
   }
+
+  let weightStyle =
+    weight === "medium" ? "font-medium" : weight === "bold" ? "font-bold" : "";
 
   return (
     <Component
-      className={clsx(
-        "font-serif", // police serif
-        className,
-        variantStyles,
-        colorStyles,
-        weight === "medium" && "font-medium"
-      )}
-      style={{
-        ...style,
-        letterSpacing: "0.025em", // légèrement augmenté pour un style pro
-      }}
+      className={clsx(varianStyles, colorStyles, weightStyle, className)}
     >
       {children}
     </Component>

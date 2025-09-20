@@ -1,49 +1,47 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}", // Tous les fichiers dans "src/"
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
         white: "#ffffff",
         primary: {
-          DEFAULT: "#276ed2", // <--- alias qui crée `text-primary`
-          50: "#e6f0ff",
-          100: "#cce0ff",
-          200: "#99c2ff",
-          300: "#66a3ff",
-          400: "#3385ff",
-          500: "#276ed2", // couleur principale
-          600: "#1f55a0",
-          700: "#173c6f",
-          800: "#0f2340",
-          900: "#070b1a",
+          50: "#e6f5eb", // très clair
+          100: "#c0e6cd", // clair
+          200: "#99d6af", // moyen clair
+          300: "#73c690", // moyen
+          400: "#4db672", // moyen foncé
+          DEFAULT: "#2a7149", // couleur principale
+          500: "#25643f", // légèrement plus foncé
+          600: "#1f5635", // foncé
+          700: "#19462b", // très foncé
+          800: "#123622", // presque noir
+          900: "#0b2518", // noir profond
         },
-        green: {
-          50: "#f0ffe6",
-          100: "#e0ffcc",
-          200: "#b2ff99",
-          300: "#80ff66",
-          400: "#4dff33",
-          500: "#3ee00a", // couleur principale
-          600: "#2fb008",
-          700: "#208006",
-          800: "#105003",
-          900: "#082801",
+        secondary: {
+          50: "#fff4e6", // très clair
+          100: "#ffe0bf", // clair
+          200: "#ffc999", // moyen clair
+          300: "#ffb273", // moyen
+          400: "#ff9b4d", // moyen foncé
+          DEFAULT: "#be7b45", // couleur principale
+          500: "#a6693b", // légèrement plus foncé
+          600: "#8d5531", // foncé
+          700: "#724427", // très foncé
+          800: "#58331c", // presque noir
+          900: "#3c2312", // noir profond
+        },
+
+        accent: {
+          50: "#fffbe6",
+          100: "#fff1b8",
+          200: "#ffe58f",
+          DEFAULT: "#ffd666", // Jaune doux enfant
+          500: "#fadb14",
+          700: "#d4b106",
+          900: "#614700",
         },
         gray: {
-          // 100: "#f1f5f9",
-          // 200: "#e2e8f0",
-          // 300: "#cbd5e1",
-          // 400: "#94a3b8",
-          // 500: "#64748b",
-          // 600: "#475569",
-          // 700: "#334155",
-          // 800: "#1e293b",
-          // 900: "#0f172a",
-          // 950: "#020617",
           100: "#f5f5f4",
           200: "#e7e5e4",
           300: "#d6d3d1",
@@ -53,7 +51,6 @@ module.exports = {
           700: "#44403c",
           800: "#292524",
           900: "#1c1917",
-          950: "#0c0a09",
         },
         alert: {
           success: "#4ade80",
@@ -61,25 +58,14 @@ module.exports = {
           warning: "#fbbf24",
         },
       },
-      animation: {
-        "fade-in-up": "fadeInUp 1s ease-out forwards",
-        "pulse-slow": "pulse 4s ease-in-out infinite",
-      },
-      keyframes: {
-        fadeInUp: {
-          "0%": { opacity: 0, transform: "translateY(20px)" },
-          "100%": { opacity: 1, transform: "translateY(0)" },
-        },
-      },
       borderRadius: {
-        DEFAULT: "8px", // Définit une bordure arrondie par défaut de 12px
-        sm: "8px", // Petite bordure
-        md: "16px", // Moyenne bordure
-        lg: "24px", // Grande bordure
-        full: "9999px", // Bordure totalement ronde
+        DEFAULT: "12px",
+        sm: "8px",
+        md: "16px",
+        lg: "24px",
+        full: "9999px",
       },
     },
   },
   plugins: [require("daisyui")],
 };
-

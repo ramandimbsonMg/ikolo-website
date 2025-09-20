@@ -1,20 +1,37 @@
+import clsx from "clsx";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
+import Navigation from "../navigation/navigation";
+import Footer from "../navigation/footer";
 
 interface Props {
     children: React.ReactNode;
+    className?: string;
     isDisplayBreakCrumbs?: boolean;
 }
 
-export const Layout = ({ children, isDisplayBreakCrumbs = true }: Props) => {
+export const Layout = ({ children, className, isDisplayBreakCrumbs = true }: Props) => {
     return (
         <>
-            <div className="">
-                {/* Contenu occupe 80% */}
-                <div className="w-full h-full">
-                    {isDisplayBreakCrumbs && <Breadcrumbs />}
-                    {children}
-                </div>
-            </div>
+            <Navigation />
+            {isDisplayBreakCrumbs && <Breadcrumbs />}
+            {children}
+            <Footer />
+        </>
+    );
+};
+export const LayoutConnexion = ({ children, className, isDisplayBreakCrumbs = true }: Props) => {
+    return (
+        <>
+            {isDisplayBreakCrumbs && <Breadcrumbs />}
+            {children}
+            <Footer />
+        </>
+    );
+};
+export const LayoutDetails = ({ children, className, isDisplayBreakCrumbs = true }: Props) => {
+    return (
+        <>
+            {children}
         </>
     );
 };

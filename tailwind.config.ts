@@ -10,16 +10,17 @@ const config: Config = {
       colors: {
         white: "#ffffff",
         primary: {
-          100: "#ccfbf1",
-          200: "#99f6e4",
-          300: "#5eead4",
-          DEFAULT: "#2dd4bf",
-          500: "#14b8a6",
-          600: "#0d9488",
-          700: "#0f766e",
-          800: "#115e59",
-          900: "#134e4a",
-          950: "#042f2e",
+          50: "#fdeae6",    // Très pâle  
+          100: "#f9c5ba",   // Très clair  
+          200: "#f59d8d",   // Clair  
+          DEFAULT: "#f07561",   // Milieu clair  
+          400: "#ec4e35",   // Couleur principale  
+          500: "#c73e22",   // Légèrement plus foncé  
+          600: "#9b311b",   // Foncé léger  
+          700: "#702414",   // Plus foncé  
+          800: "#46180e",   // Foncé profond  
+          900: "#250d07",   // Très foncé  
+          950: "#120603",   // Quasi noir  
         },
         secondary: {
           100: "#ffe4e6",

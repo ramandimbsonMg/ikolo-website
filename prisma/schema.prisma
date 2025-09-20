@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+/// ✅ Utilisateur (géré par login/register)
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  orders    Order[]
+}
+
+/// ✅ Catégories de produits (ex: CLASSIC, ALWAYZEN, NOVA, Huiles…)
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+
+  products  Product[]
+}
+
+/// ✅ Produits
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String
+  price       Float
+  image       String
+  plant       String?   // ex: ravintsara, aloe vera
+  type        String?   // ex: visage, cheveux, corps
+  createdAt   DateTime  @default(now())
+
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  orderItems  OrderItem[]
+}
+
+/// ✅ Commandes
+model Order {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+
+  items     OrderItem[]
+}
+
+/// ✅ Items dans une commande (produits liés)
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int      @default(1)
+
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+/// ✅ Blog
+model Blog {
+  id        Int       @id @default(autoincrement())
+  title     String
+  slug      String    @unique
+  excerpt   String?
+  content   String
+  image     String?
+  createdAt DateTime  @default(now())
+}
+
+/// ✅ Témoignages
+model Testimonial {
+  id        Int       @id @default(autoincrement())
+  name      String
+  message   String
+  rating    Int?      // 1 à 5 étoiles
+  createdAt DateTime  @default(now())
+}
+
+/// ✅ Newsletter
+model Newsletter {
+  id        Int       @id @default(autoincrement())
+  subject   String
+  content   String
+  imageUrl  String?
+  createdAt DateTime  @default(now())
+}
+
+/// ✅ Abonnés à la Newsletter
+model NewsletterSubscriber {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+}
