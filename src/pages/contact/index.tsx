@@ -12,6 +12,7 @@ import { Seo } from "@/ui/components/seo/seo";
 import { Layout } from "@/ui/components/layout/layout";
 import Link from "next/link";
 import Image from "next/image";
+import { Container } from "@/ui/components/container/container";
 
 export default function Contact() {
   return (
@@ -22,7 +23,7 @@ export default function Contact() {
       />
       <div className="bg-gradient-to-br from-primary-50 to-secondary-50">
         <Layout isDisplayBreakCrumbs={false} className="">
-          <section className="container mx-auto px-6 py-16">
+          <Container className="py-16">
             {/* Header */}
             <div className="text-center mb-12">
               <h2 className="text-4xl font-extrabold text-primary">
@@ -35,9 +36,9 @@ export default function Contact() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-10">
+            <div className="lg:grid space-y-4 lg:space-y-0 lg:grid-cols-2 lg:gap-10">
               {/* Formulaire */}
-              <div className="bg-white shadow-lg rounded-2xl lg:pt-20 p-8">
+              <div className="bg-white shadow-lg rounded-2xl lg:pt-20 lg:p-8 px-4 pt-4">
                 <Link href="/" className="flex items-center gap-3 justify-center">
                   <Image
                     src="/assets/images/logo/logo_ikolo~2.png"
@@ -96,7 +97,7 @@ export default function Contact() {
                     </h4>
                     <p className="text-gray-600">Antananarivo, Madagascar</p>
                     {/* Si tu as une adresse physique précise, tu peux intégrer Google Maps ici */}
-                    <div className="mt-3 rounded-lg overflow-hidden w-full">
+                    <div className="mt-3 rounded-lg overflow-hidden w-full justify-center text-center flex relative h-48 lg:w-full ">
                       <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127651.76937614328!2d47.4782734!3d-18.8791906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x21f07d4b7f10c2a7%3A0x6b5d5b3f9a8a9e3!2sAntananarivo!5e0!3m2!1sfr!2smg!4v1679936017391!5m2!1sfr!2smg"
                         width="100%"
@@ -110,7 +111,7 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-          </section>
+          </Container>
         </Layout>
       </div>
     </>

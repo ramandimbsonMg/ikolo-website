@@ -1,5 +1,5 @@
 // src/pages/blog.tsx
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import BlogCard from "@/ui/components/blog/blog-card";
 import { Seo } from "@/ui/components/seo/seo";
 import { Layout } from "@/ui/components/layout/layout";

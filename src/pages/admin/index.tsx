@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Seo } from "@/ui/components/seo/seo";
-import { Layout } from "@/ui/components/layout/layout";
 import AdminSidebar from "@/ui/components/sidebar/admin-sidebar";
 import AdminChart from "@/ui/components/admin/admin-chart";
 
