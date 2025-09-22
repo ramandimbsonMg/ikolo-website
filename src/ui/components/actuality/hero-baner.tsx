@@ -31,8 +31,8 @@ export default function HeroBanner() {
   }, []);
 
   return (
-      <div className="bg-secondary/10 h-[537px] lg:h-[535px] relative z-10 shadow-lg shadow-secondary/20">
-    <section className="relative h-[537px] lg:h-[535px] overflow-hidden lg:rounded-bl-full">
+      <div className="bg-secondary/10 min-h-screen lg:h-[535px] relative z-10 shadow-lg shadow-secondary/20">
+    <section className="relative min-h-screen lg:h-[535px] overflow-hidden lg:rounded-bl-full">
         {/* Image de fond */}
         <Image
           src="/assets/images/banier/2.jpg"
@@ -53,7 +53,7 @@ export default function HeroBanner() {
               vera, ravintsara, baobab...
             </p>
 
-            <div className="mt-6 lg:flex lg:gap-4 space-y-10 lg:space-y-0">
+            <div className="lg:mt-6 mt-14 lg:flex lg:gap-4 space-y-10 lg:space-y-0">
               <div>
                 <Link
                 href="/products"
