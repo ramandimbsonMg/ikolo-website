@@ -43,7 +43,7 @@ export default function HeroBanner() {
         />
 
         {/* Overlay sombre */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 flex lg:items-center z-10 lg:pt-0 pt-20">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 flex lg:items-center z-10 lg:pt-0 pt-14">
           <div className="container mx-auto px-6 text-white max-w-3xl relative z-10">
             <h2 className="lg:text-6xl text-5xl font-serif font-bold leading-snug">
               La beauté enracinée dans la nature malgache
