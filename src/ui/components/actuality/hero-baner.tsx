@@ -31,8 +31,8 @@ export default function HeroBanner() {
   }, []);
 
   return (
-      <div className="bg-secondary/10 min-h-screen lg:h-[535px] relative z-10 shadow-lg shadow-secondary/20">
-    <section className="relative min-h-screen lg:h-[535px] overflow-hidden lg:rounded-bl-full">
+    <div className="bg-secondary/10 min-h-screen lg:min-h-[unset] lg:h-[450px] relative z-10 shadow-lg shadow-secondary/20">
+      <section className="relative min-h-screen lg:min-h-[unset] lg:h-[450px] overflow-hidden lg:rounded-bl-full">
         {/* Image de fond */}
         <Image
           src="/assets/images/banier/2.jpg"
@@ -56,19 +56,19 @@ export default function HeroBanner() {
             <div className="mt-6 lg:flex lg:gap-4 space-y-10 lg:space-y-0">
               <div>
                 <Link
-                href="/products"
-                className="px-5 py-3 rounded-full bg-secondary-400/80 hover:bg-secondary-400 transition text-white font-medium shadow-lg"
-              >
-                Découvrir nos produits
-              </Link>
+                  href="/products"
+                  className="px-5 py-3 rounded-full bg-secondary-400/80 hover:bg-secondary-400 transition text-white font-medium shadow-lg"
+                >
+                  Découvrir nos produits
+                </Link>
               </div>
               <div>
-              <Link
-                href="/shop"
-                className="px-5 py-3 rounded-full bg-white/30 hover:bg-white/50 transition text-white font-medium shadow-lg"
-              >
-                Commander maintenant
-              </Link>
+                <Link
+                  href="/shop"
+                  className="px-5 py-3 rounded-full bg-white/30 hover:bg-white/50 transition text-white font-medium shadow-lg"
+                >
+                  Commander maintenant
+                </Link>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function HeroBanner() {
         {bulls.map((b, i) => (
           <Bull key={i} {...b} />
         ))}
-    </section>
-      </div>
+      </section>
+    </div>
   );
 }
