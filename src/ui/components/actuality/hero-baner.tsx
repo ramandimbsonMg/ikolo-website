@@ -31,8 +31,8 @@ export default function HeroBanner() {
   }, []);
 
   return (
-      <div className="bg-secondary/10 h-[450px] md:h-[535px] relative z-10 shadow-lg shadow-secondary/20">
-    <section className="relative h-[450px] md:h-[535px] overflow-hidden rounded-bl-full">
+      <div className="bg-secondary/10 min-h-screen lg:h-[535px] relative z-10 shadow-lg shadow-secondary/20">
+    <section className="relative min-h-screen lg:h-[535px] overflow-hidden lg:rounded-bl-full">
         {/* Image de fond */}
         <Image
           src="/assets/images/banier/2.jpg"
