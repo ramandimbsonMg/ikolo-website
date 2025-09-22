@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Seo } from "@/ui/components/seo/seo";
-import { FiEye, FiEyeOff } from "react-icons/fi"; // 👁️ import des icônes
 import { Layout } from "@/ui/components/layout/layout";
 import { ContainerContenu } from "@/ui/components/container/container";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -13,8 +14,17 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [mode, setMode] = useState<"login" | "register">("login");
-  const [message, setMessage] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👁️ toggle mot de passe
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (token && user?.role) {
+      if (user.role === "admin") router.replace("/admin/dashboard");
+      else router.replace("/");
+    } else setLoading(false);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,29 +41,38 @@ export default function AuthPage() {
           ...(mode === "register" && { name }),
         }),
       });
-      const data = await res.json();
-      setMessage(data.message || data.error);
 
-      if (data.token) {
+      const data = await res.json();
+
+      if (res.ok && data.user) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        toast.success(
+          mode === "login"
+            ? "Connexion réussie !"
+            : "Inscription réussie ! Connectez-vous"
+        );
+
         if (mode === "login") {
-          router.push("/acs-zone");
-        }
+          router.push(data.user.role === "admin" ? "/admin" : "/");
+        } else setMode("login");
+      } else {
+        toast.error(data.error || "Une erreur est survenue");
       }
     } catch (err) {
       console.error(err);
-      setMessage("❌ Erreur lors de la connexion");
+      toast.error("Erreur serveur, réessayez plus tard");
     }
   };
 
+  if (loading) return null;
+
   return (
     <>
-      <Seo
-        title="Ikolo | Beauté naturelle malgache"
-        description="Produits cosmétiques à base de plantes de Madagascar."
-      />
+      <Seo title="Ikolo | Auth" description="Connexion et inscription" />
       <div className="bg-gradient-to-br from-primary-50 to-secondary-50">
-        <Layout isDisplayBreakCrumbs={false} className="">
+        <Layout isDisplayBreakCrumbs={false}>
           <div className="min-h-screen flex items-center justify-center">
             <ContainerContenu>
               <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-8 w-full max-w-md">
@@ -73,6 +92,7 @@ export default function AuthPage() {
                         onChange={(e) => setName(e.target.value)}
                         className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                         placeholder="Votre nom"
+                        required
                       />
                     </div>
                   )}
@@ -86,11 +106,11 @@ export default function AuthPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                      placeholder="ramandimbsonespoir@email.com"
+                      placeholder="exemple@email.com"
+                      required
                     />
                   </div>
 
-                  {/* Mot de passe avec icône 👁️ */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Mot de passe
@@ -102,6 +122,7 @@ export default function AuthPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="mt-1 w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                         placeholder="********"
+                        required
                       />
                       <button
                         type="button"
@@ -135,12 +156,6 @@ export default function AuthPage() {
                     ? "Pas encore de compte ? Créez-en un"
                     : "Déjà inscrit ? Connectez-vous"}
                 </p>
-
-                {message && (
-                  <p className="mt-4 text-center text-red-500 font-medium">
-                    {message}
-                  </p>
-                )}
               </div>
             </ContainerContenu>
           </div>

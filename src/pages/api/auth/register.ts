@@ -1,4 +1,3 @@
-// src/pages/api/auth/register.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
@@ -9,41 +8,35 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
+  if (req.method !== "POST")
     return res.status(405).json({ error: "Méthode non autorisée" });
-  }
 
-  const { email, password, name } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email et mot de passe requis" });
-  }
+  const { name, email, password } = req.body;
+  if (!name || !email || !password)
+    return res.status(400).json({ error: "Champs requis manquants" });
 
   try {
-    // Vérifie si l'utilisateur existe déjà
     const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({ error: "Cet email est déjà utilisé" });
-    }
 
-    // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Création de l'utilisateur
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, name },
+      data: { name, email, password: hashedPassword, role: "user" },
     });
 
     return res.status(201).json({
       message: "Utilisateur créé avec succès",
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar || null,
+        role: user.role,
+      },
     });
-  } catch (error: any) {
-    // Gestion spécifique de l'erreur P2002 (doublon)
-    if (error.code === "P2002") {
-      return res.status(400).json({ error: "Cet email est déjà utilisé" });
-    }
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: "Erreur serveur" });
   }
 }

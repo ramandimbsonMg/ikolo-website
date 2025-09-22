@@ -1,10 +1,11 @@
-import prisma from "@/lib/prisma";
-import { ContainerContenu } from "@/ui/components/container/container";
+import { prisma } from "@/lib/prisma";
+import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
 import ProductCard from "@/ui/components/products/product-card";
 import ProductFilter from "@/ui/components/products/product-filter";
 import { Seo } from "@/ui/components/seo/seo";
 import { useState } from "react";
+import { useCart } from "../api/cart/use-cart";
 
 export default function Products({
   products,
@@ -14,7 +15,14 @@ export default function Products({
   plants: string[];
 }) {
   const [list, setList] = useState(products);
-
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    cartTotal,
+    saveCartToDB,
+  } = useCart();
   function handleFilter(filters: any) {
     let filtered = products;
     if (filters.category)
@@ -33,7 +41,7 @@ export default function Products({
 
       <div className="bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
         <Layout isDisplayBreakCrumbs={false}>
-          <ContainerContenu>
+          <Container>
             <section className="py-16">
               {/* Header */}
               <div className="text-center mb-12">
@@ -47,15 +55,27 @@ export default function Products({
               </div>
 
               {/* Filtres */}
-              <div className="bg-white/70 backdrop-blur-md shadow-md rounded-xl p-6 mb-10">
+              <div className="bg-white/70 backdrop-blur-md shadow-md rounded-xl px-6 pt-3 pb-3 mb-10 w-1/3">
                 <ProductFilter plants={plants} onFilter={handleFilter} />
               </div>
 
               {/* Produits */}
               {list.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {list.map((p) => (
-                    <ProductCard key={p.id} product={p} />
+                    <ProductCard
+                      key={p.id}
+                      product={p}
+                      onAdd={() =>
+                        addToCart({
+                          id: p.id,
+                          name: p.name,
+                          price: p.price,
+                          image: p.image,
+                          quantity: 1,
+                        })
+                      }
+                    />
                   ))}
                 </div>
               ) : (
@@ -64,7 +84,7 @@ export default function Products({
                 </p>
               )}
             </section>
-          </ContainerContenu>
+          </Container>
         </Layout>
       </div>
     </>

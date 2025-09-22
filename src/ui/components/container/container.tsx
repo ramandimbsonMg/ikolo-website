@@ -7,7 +7,7 @@ interface Props {
 
 export const Container = ({children, className}:Props) => {
     return (
-        <div className={clsx("w-full lg:max-w-7xl mx-auto lg:px-10 px-2",className)}>
+        <div className={clsx("w-full lg:max-w-8xl mx-auto lg:px-10 px-2",className)}>
             {children}
         </div>
     )

@@ -1,102 +1,158 @@
-// src/pages/shop.tsx
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import ProductCard from "@/ui/components/products/product-card";
 import { Seo } from "@/ui/components/seo/seo";
 import { Layout } from "@/ui/components/layout/layout";
-import { ContainerContenu } from "@/ui/components/container/container";
+import { Container } from "@/ui/components/container/container";
 import { useState } from "react";
+import { useCart } from "../api/cart/use-cart";
+import { AiOutlineClose } from "react-icons/ai";
 
 export default function Shop({ products }: { products: any[] }) {
-  const [cartOpen, setCartOpen] = useState(false);
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    removeFinal,
+    clearCart,
+    cartTotal,
+    saveCartToDB,
+  } = useCart();
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !address || cart.length === 0) {
+      alert(
+        "Veuillez remplir tous les champs et avoir des produits dans le panier !"
+      );
+      return;
+    }
+
+    await saveCartToDB(); // enregistre la commande
+
+    alert(`✅ Commande enregistrée :
+Nom : ${name}
+Adresse : ${address}
+Produits : ${cart.map((p) => `${p.name} x${p.quantity}`).join(", ")}
+Total : ${cartTotal.toLocaleString()} Ar`);
+
+    clearCart();
+    setName("");
+    setAddress("");
+  };
 
   return (
     <>
       <Seo
-        title="Ikolo | Beauté naturelle malgache"
-        description="Produits cosmétiques à base de plantes de Madagascar."
+        title="Ikolo | Boutique"
+        description="Produits cosmétiques naturels"
       />
-      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
-        <Layout isDisplayBreakCrumbs={false} className="">
-          <ContainerContenu>
-            <section className="px-6 py-16">
-              {/* En-tête boutique */}
-              <div className="text-center max-w-2xl mx-auto">
-                <h1 className="text-4xl font-extrabold text-primary">
-                  🌿 Boutique Ikolo
-                </h1>
-                <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-                  Découvrez nos produits cosmétiques à base de plantes
-                  malgaches.
-                  <br />
-                  Commande simulée — aucun paiement réel.
-                </p>
-              </div>
+      <Layout isDisplayBreakCrumbs={false}>
+        <Container>
+          <h1 className="text-4xl font-bold text-center text-primary my-8">
+            🌿 Boutique Ikolo
+          </h1>
 
-              {/* Liste des produits */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-12">
-                {products.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+          {/* Panier */}
+          {cart.length > 0 && (
+            <div className="mt-16 bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl max-w-2xl mx-auto">
+              <h2 className="text-2xl font-semibold mb-4">🛒 Votre panier</h2>
+              <ul className="space-y-3">
+                {cart.map((item) => (
+                  <li
+                    key={item.id}
+                    className="flex justify-between items-center bg-gray-100 p-3 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          item.image || "/assets/images/products/default.webp"
+                        }
+                        alt={item.name}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                      <span>{item.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span>
+                        {item.quantity} x {item.price.toLocaleString()} Ar
+                      </span>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="px-2 text-2xl"
+                      >
+                        -
+                      </button>
+                      {item.pendingRemove && (
+                        <button
+                          onClick={() => removeFinal(item.id)}
+                          className="px-2 text-red-600"
+                        >
+                          Supprimer définitivement
+                        </button>
+                      )}
+                    </div>
+                  </li>
                 ))}
+              </ul>
+              <div className="mt-4 flex justify-between font-bold text-lg">
+                <span>Total :</span>
+                <span>{cartTotal.toLocaleString()} Ar</span>
               </div>
 
-              {/* Séparateur */}
-              <div className="my-16 border-t border-gray-200" />
-
-              {/* Formulaire de commande */}
-              <div className="max-w-lg mx-auto bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl">
-                <h3 className="text-2xl font-semibold text-gray-800">
-                  📝 Simuler une commande
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Remplissez ce formulaire pour simuler une commande.
-                </p>
-
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    alert(
-                      "✅ Commande simulée — Backend requis pour réel envoi."
-                    );
-                  }}
-                  className="grid gap-4 mt-6"
+              <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+                <input
+                  type="text"
+                  placeholder="Nom complet"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full p-3 border rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Adresse de livraison"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full p-3 border rounded-lg"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-dark transition"
                 >
-                  <input
-                    placeholder="Nom complet"
-                    className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    required
-                  />
-                  <input
-                    placeholder="Adresse de livraison"
-                    className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    required
-                  />
-                  <select
-                    className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    required
-                  >
-                    <option value="">Choisir un produit</option>
-                    {products.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="submit"
-                    className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-600 transition"
-                  >
-                    Envoyer la commande
-                  </button>
-                </form>
-              </div>
-            </section>
-          </ContainerContenu>
-        </Layout>
-      </div>
+                  Valider la commande
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Liste des produits */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+            {products.map((p) => (
+              <ProductCard
+                key={p.id}
+                product={p}
+                onAdd={() =>
+                  addToCart({
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    image: p.image,
+                    quantity: 1,
+                  })
+                }
+              />
+            ))}
+          </div>
+        </Container>
+      </Layout>
     </>
   );
 }
 
+// Récupération des produits côté serveur
 export async function getServerSideProps() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

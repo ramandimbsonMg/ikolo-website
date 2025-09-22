@@ -18,8 +18,8 @@ export default function Blog({ posts }: { posts: any[] }) {
           <ContainerContenu>
             <section className="px-6 py-16">
               <div className="text-center max-w-2xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900">
-                  📰 Actualités & Blog
+              <h1 className="text-4xl font-extrabold text-primary">
+                  📰 Blog
                 </h1>
                 <p className="mt-4 text-gray-600 leading-relaxed">
                   Explorez nos derniers articles sur la beauté naturelle,
@@ -40,7 +40,7 @@ export default function Blog({ posts }: { posts: any[] }) {
                 </p>
               )}
             </section>
-          </ContainerContenu>
+          </ContainerContenu> 
         </Layout>
       </div>
     </>
