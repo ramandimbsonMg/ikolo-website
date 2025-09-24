@@ -1,67 +1,83 @@
-// ui/module/landing-page/landing-page.view.tsx
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/pages/api/cart/use-cart";
 import HeroBanner from "@/ui/components/actuality/hero-baner";
 import ProductCard from "@/ui/components/products/product-card";
 import SectionTitle from "@/ui/components/section/section-title";
 
+type Category = { id: number; name: string };
 type Product = {
   id: number;
   name: string;
   description?: string;
   price: number;
   image?: string | null;
-  plant?: string | null;
-  type?: string | null;
-  category?: { id: number; name: string } | null;
+  category?: Category | null;
 };
 
-export default function LandignPageView({
-  products = [],
-  plants = [],
-}: {
-  products?: Product[];
-  plants?: string[];
-}) {
+export default function LandingPageView() {
   const { addToCart } = useCart();
-  const [activePlant, setActivePlant] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true); // ⚡ état de chargement
 
-  // Liste filtrée (recalculée si products / activePlant / query changent)
-  const list = useMemo(() => {
-    let out = Array.isArray(products) ? products.slice() : [];
+  // ⚡ Charger produits et catégories depuis l'API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [prodRes, catRes] = await Promise.all([
+          fetch("/api/products"),
+          fetch("/api/categories"),
+        ]);
 
-    if (activePlant) {
-      out = out.filter(
-        (p) => (p.plant ?? "").toLowerCase() === activePlant.toLowerCase()
-      );
+        const prodData = await prodRes.json();
+        const catData = await catRes.json();
+
+        setProducts(prodData.products || []);
+        setCategories(catData.categories || []);
+      } catch (err) {
+        console.error("Erreur chargement produits/catégories :", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // ⚡ Filtrage produits par catégorie + recherche
+  const filteredProducts = useMemo(() => {
+    let out = [...products];
+
+    if (activeCategory) {
+      out = out.filter((p) => p.category?.id === activeCategory);
     }
 
     if (query.trim()) {
-      const q = query.trim().toLowerCase();
+      const q = query.toLowerCase();
       out = out.filter(
         (p) =>
-          p.name?.toLowerCase().includes(q) ||
+          p.name.toLowerCase().includes(q) ||
           p.description?.toLowerCase().includes(q) ||
-          (p.category?.name ?? "").toLowerCase().includes(q)
+          p.category?.name?.toLowerCase().includes(q)
       );
     }
 
     return out;
-  }, [products, activePlant, query]);
+  }, [products, activeCategory, query]);
 
-  // Classe ou style grid : si moins de 4 éléments on réduit colonnes (tailwind ne supporte pas dyn classes faciles -> inline style)
-  const gridStyle =
-    list.length > 0 && list.length < 4
-      ? {
-          gridTemplateColumns: `repeat(${Math.min(
-            list.length,
-            4
-          )}, minmax(0, 1fr))`,
-        }
-      : undefined;
+  // ⚡ Helper pour l'image du produit
+  const getProductImage = (product: Product) => {
+    if (!product.image) return "/assets/images/products/default.webp";
+    // encode uniquement pour URL valide
+    return `/uploads/${product.image
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/")}`;
+  };
 
   return (
     <>
@@ -70,41 +86,42 @@ export default function LandignPageView({
       <section className="container mx-auto px-6 py-12">
         <SectionTitle title="Nos best-sellers" subtitle="Les favoris Ikolo" />
 
-        {/* Recherche + Filtres */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        {/* Filtrage catégories + recherche */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 mt-10">
           <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() => {
-                setActivePlant(null);
+                setActiveCategory(null);
                 setQuery("");
               }}
               className={`px-4 py-2 rounded-lg text-sm ${
-                activePlant === null ? "bg-green-700 text-white" : "bg-gray-200"
+                activeCategory === null
+                  ? "bg-green-700 text-white"
+                  : "bg-gray-200"
               }`}
             >
               Tous
             </button>
 
-            {/* sécurité : plants peut être undefined */}
-            {Array.isArray(plants) && plants.length > 0 ? (
-              plants.map((plant) => (
+            {categories.length > 0 ? (
+              categories.map((cat) => (
                 <button
-                  key={plant}
-                  onClick={() => {
-                    setActivePlant((cur) => (cur === plant ? null : plant));
-                  }}
+                  key={cat.id}
+                  onClick={() =>
+                    setActiveCategory((cur) => (cur === cat.id ? null : cat.id))
+                  }
                   className={`px-4 py-2 rounded-lg text-sm ${
-                    activePlant === plant
+                    activeCategory === cat.id
                       ? "bg-green-700 text-white"
                       : "bg-cyan-500 text-white"
                   }`}
                 >
-                  {plant}
+                  {cat.name}
                 </button>
               ))
             ) : (
               <span className="text-gray-400 italic text-sm">
-                Aucune plante
+                Aucune catégorie
               </span>
             )}
           </div>
@@ -119,7 +136,7 @@ export default function LandignPageView({
             <button
               onClick={() => {
                 setQuery("");
-                setActivePlant(null);
+                setActiveCategory(null);
               }}
               className="px-3 py-2 rounded-lg bg-gray-200"
             >
@@ -128,22 +145,37 @@ export default function LandignPageView({
           </div>
         </div>
 
-        {/* Produits */}
-        {list?.length > 0 ? (
-          <div
-            className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-            style={gridStyle}
-          >
-            {list.map((p) => (
+        {/* Produits / Loader */}
+        {loading ? (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+              >
+                <div className="h-48 bg-gray-300 rounded-t-lg"></div>
+                <div className="p-4">
+                  <div className="h-6 bg-gray-300 rounded mb-2 w-3/4"></div>
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredProducts.length > 0 ? (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {filteredProducts.map((p) => (
               <ProductCard
                 key={p.id}
-                product={p}
+                product={{
+                  ...p,
+                  image: getProductImage(p),
+                }}
                 onAdd={() =>
                   addToCart({
                     id: p.id,
                     name: p.name,
                     price: p.price,
-                    image: p.image ?? "/assets/images/products/default.webp",
+                    image: getProductImage(p),
                     quantity: 1,
                   })
                 }

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
-import ProductCard from "@/ui/components/products/product-card";
+import ProductCard from "@/ui/components/products/product-card"; 
 import ProductFilter from "@/ui/components/products/product-filter";
 import { Seo } from "@/ui/components/seo/seo";
 import { useState } from "react";

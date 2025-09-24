@@ -1,11 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FaFacebookF, FaInstagram, FaTiktok, FaTwitter } from "react-icons/fa";
 
-// Bull component (animation légère)
+// Bull décoratif
 const Bull = ({ size, x, y, delay }: any) => (
   <div
-    className="absolute bg-white/40 rounded-full animate-bounce"
+    className="absolute bg-white/50 rounded-full animate-bounce pointer-events-none"
     style={{
       width: size,
       height: size,
@@ -16,11 +19,30 @@ const Bull = ({ size, x, y, delay }: any) => (
   />
 );
 
+// Icône réseau social flottant
+const SocialBull = ({ Icon, link, color, x, y, delay }: any) => (
+  <Link
+    href={link}
+    target="_blank"
+    className="absolute transition transform hover:scale-125 z-20"
+    style={{
+      left: `${x}%`,
+      top: `${y}%`,
+      animationDelay: `${delay}s`,
+      animation: "float 6s ease-in-out infinite",
+      color: color,
+    }}
+  >
+    <Icon className="text-3xl md:text-4xl drop-shadow-[0_0_10px_rgba(255,255,255,0.6)] text-gray-300 hover:drop-shadow-[0_0_15px_currentColor]" />
+  </Link>
+);
+
 export default function HeroBanner() {
   const [bulls, setBulls] = useState<any[]>([]);
+  const [socials, setSocials] = useState<any[]>([]);
 
   useEffect(() => {
-    // Crée 10 bulls aléatoires
+    // Bulls décoratifs
     const newBulls = Array.from({ length: 10 }).map(() => ({
       size: Math.random() * 15 + 5 + "px",
       x: Math.random() * 100,
@@ -28,14 +50,31 @@ export default function HeroBanner() {
       delay: Math.random() * 3,
     }));
     setBulls(newBulls);
+
+    // Icônes sociales flottantes avec couleurs spécifiques
+    const socialIcons = [
+      { Icon: FaFacebookF, link: "https://facebook.com", color: "#1877F2" },
+      { Icon: FaInstagram, link: "https://instagram.com", color: "#E1306C" },
+      { Icon: FaTiktok, link: "https://tiktok.com", color: "#69C9D0" },
+      { Icon: FaTwitter, link: "https://twitter.com", color: "#1DA1F2" },
+    ];
+
+    const newSocials = socialIcons.map((s) => ({
+      ...s,
+      x: Math.random() * 80 + 10, // positions aléatoires
+      y: Math.random() * 80 + 10,
+      delay: Math.random() * 5,
+    }));
+
+    setSocials(newSocials);
   }, []);
 
   return (
-    <div className="bg-secondary/10 min-h-screen lg:min-h-[unset] lg:h-[450px] relative z-10 shadow-lg shadow-secondary/20">
-      <section className="relative min-h-screen lg:min-h-[unset] lg:h-[450px] overflow-hidden lg:rounded-bl-full">
+    <div className=" min-h-screen lg:min-h-[unset] lg:h-[500px] relative z-10 mt-5">
+      <section className="relative min-h-screen lg:min-h-[unset] lg:h-[500px] overflow-hidden lg:rounded-bl-full lg:rounded-tr-full">
         {/* Image de fond */}
         <Image
-          src="/assets/images/banier/2.jpg"
+          src="/assets/images/banier/3.jpg"
           alt="Plantes malgaches"
           fill
           style={{ objectFit: "cover" }}
@@ -43,8 +82,8 @@ export default function HeroBanner() {
         />
 
         {/* Overlay sombre */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 flex lg:items-center z-10 lg:pt-0 pt-14">
-          <div className="container mx-auto px-6 text-white max-w-3xl relative z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30 flex lg:items-center z-10 lg:pt-0 pt-14 pointer-events-none">
+          <div className="container mx-auto px-6 text-white max-w-3xl relative z-10 pointer-events-auto">
             <h2 className="lg:text-6xl text-5xl font-serif font-bold leading-snug">
               La beauté enracinée dans la nature malgache
             </h2>
@@ -78,7 +117,27 @@ export default function HeroBanner() {
         {bulls.map((b, i) => (
           <Bull key={i} {...b} />
         ))}
+
+        {/* Réseaux sociaux flottants */}
+        {socials.map((s, i) => (
+          <SocialBull key={i} {...s} />
+        ))}
       </section>
+
+      {/* Animation CSS custom */}
+      <style jsx>{`
+        @keyframes float {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+      `}</style>
     </div>
   );
 }
