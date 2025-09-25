@@ -24,10 +24,7 @@ async function generateUniqueSlug(name: string) {
   return slug;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // ---------------- GET produits ----------------
   if (req.method === "GET") {
     const products = await prisma.product.findMany({
@@ -58,23 +55,17 @@ export default async function handler(
       const file = data.files.image;
       if (file && !Array.isArray(file)) {
         const fileExt = file.originalFilename?.split(".").pop() || "png";
-        const fileName = `${Date.now()}-${Math.random()
-          .toString(36)
-          .slice(2)}.${fileExt}`;
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
 
         const buffer = fs.readFileSync(file.filepath);
 
         const { error } = await supabase.storage
           .from("products") // ⚡ nom de ton bucket Supabase
-          .upload(fileName, buffer, {
-            contentType: file.mimetype || "image/png",
-          });
+          .upload(fileName, buffer, { contentType: file.mimetype || "image/png" });
 
         if (error) throw error;
 
-        const { data } = supabase.storage
-          .from("products")
-          .getPublicUrl(fileName);
+        const { data } = supabase.storage.from("products").getPublicUrl(fileName);
         publicUrl = data.publicUrl;
       }
 
