@@ -73,10 +73,7 @@ export default function LandingPageView() {
   const getProductImage = (product: Product) => {
     if (!product.image) return "/assets/images/products/default.webp";
     // encode uniquement pour URL valide
-    return `/uploads/${product.image
-      .split("/")
-      .map(encodeURIComponent)
-      .join("/")}`;
+    return `${product.image}`;
   };
 
   return (
@@ -113,7 +110,7 @@ export default function LandingPageView() {
                   className={`px-4 py-2 rounded-lg text-sm ${
                     activeCategory === cat.id
                       ? "bg-green-700 text-white"
-                      : "bg-cyan-500 text-white"
+                      : "bg-gray-200"
                   }`}
                 >
                   {cat.name}

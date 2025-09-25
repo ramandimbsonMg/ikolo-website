@@ -70,8 +70,8 @@ export default function HeroBanner() {
   }, []);
 
   return (
-    <div className=" min-h-screen lg:min-h-[unset] lg:h-[500px] relative z-10 mt-5">
-      <section className="relative min-h-screen lg:min-h-[unset] lg:h-[500px] overflow-hidden lg:rounded-bl-full lg:rounded-tr-full">
+    <div className=" min-h-screen lg:min-h-[unset] lg:h-[500px] relative z-10">
+      <section className="relative min-h-screen lg:min-h-[unset] lg:h-[520px] overflow-hidden lg:rounded-bl-full lg:rounded-tr-full">
         {/* Image de fond */}
         <Image
           src="/assets/images/banier/3.jpg"

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Seo } from "@/ui/components/seo/seo";
-import { Layout } from "@/ui/components/layout/layout";
 import { Dialog } from "@headlessui/react";
 import toast from "react-hot-toast";
 import AdminSidebar from "@/ui/components/sidebar/admin-sidebar";

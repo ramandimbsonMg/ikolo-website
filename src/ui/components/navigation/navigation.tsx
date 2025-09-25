@@ -17,11 +17,25 @@ export default function Navigation() {
   const [open, setOpen] = useState(false); // menu mobile
   const [dropdown, setDropdown] = useState(false); // dropdown avatar
   const [user, setUser] = useState<User | null>(null); // vrai user
+  const [scrolled, setScrolled] = useState(false); // état scroll
   const pathname = usePathname();
   const router = useRouter();
   const { cartCount } = useCart(); // compteur temps réel
 
-  // Fonction pour récupérer l'utilisateur depuis le backend
+  // scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 72) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Récupérer l'utilisateur depuis le backend
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -44,7 +58,7 @@ export default function Navigation() {
       const data = await res.json();
       setUser({ name: data.user.name, avatar: data.user.avatar || null });
 
-      // Cache local pour éviter fetch inutile
+      // Cache local
       localStorage.setItem(
         "user",
         JSON.stringify({ name: data.user.name, avatar: data.user.avatar || "" })
@@ -56,24 +70,37 @@ export default function Navigation() {
     }
   };
 
-  // Au montage, on essaie de récupérer l'utilisateur
+  // Au montage
   useEffect(() => {
     fetchUser();
   }, []);
 
+  // classes des liens
   const linkClass = (href: string) =>
     pathname === href
-      ? "text-green-700 font-semibold border-b-2 border-green-700 pb-1 h-[72px] pt-8"
+      ? scrolled
+        ? "text-white font-semibold border-b-2 border-white pb-1 h-[72px] pt-8"
+        : "text-green-700 font-semibold border-b-2 border-green-700 pb-1 h-[72px] pt-8"
+      : scrolled
+      ? "hover:text-gray-200 transition-colors text-white"
       : "hover:text-green-700 transition-colors";
 
+  // logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     router.push("/connexion");
   };
+
   return (
-    <header className="bg-secondary/10 backdrop-blur-lg h-[80px] shadow-md sticky top-0 z-50">
+    <header
+      className={`h-[80px] sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-green-800 shadow-md text-white"
+          : "bg-secondary/10 backdrop-blur-lg shadow-md"
+      }`}
+    >
       <div className="container mx-auto px-6 py-2 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
@@ -101,7 +128,7 @@ export default function Navigation() {
             <div className="relative">
               Boutique
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-2 -right-4 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -114,7 +141,7 @@ export default function Navigation() {
             Contact
           </Link>
 
-          {/* Avatar / Se connecter */}
+          {/* Avatar / Connexion */}
           {user ? (
             <div className="relative">
               <button
@@ -157,6 +184,8 @@ export default function Navigation() {
               className={`px-5 py-3 rounded-full shadow transition ${
                 pathname === "/connexion"
                   ? "bg-green-800 text-white"
+                  : scrolled
+                  ? "bg-white text-green-800 hover:bg-gray-200"
                   : "bg-green-700 text-white hover:bg-green-800"
               }`}
             >
@@ -168,7 +197,7 @@ export default function Navigation() {
         {/* bouton mobile */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-green-800"
+          className={`md:hidden ${scrolled ? "text-white" : "text-green-800"}`}
         >
           {open ? (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -194,7 +223,7 @@ export default function Navigation() {
 
       {/* menu mobile */}
       {open && (
-        <div className="md:hidden bg-secondary-50 border-t shadow-inner animate-slideDown">
+        <div className="md:hidden bg-white border-t shadow-inner animate-slideDown">
           <div className="px-6 py-4 flex flex-col gap-4 font-medium">
             <Link href="/" className={linkClass("/")}>
               Actualités

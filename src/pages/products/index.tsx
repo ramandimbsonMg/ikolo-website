@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
-import ProductCard from "@/ui/components/products/product-card"; 
+import ProductCard from "@/ui/components/products/product-card";
 import ProductFilter from "@/ui/components/products/product-filter";
 import { Seo } from "@/ui/components/seo/seo";
 import { useState } from "react";
@@ -15,20 +15,19 @@ export default function Products({
   plants: string[];
 }) {
   const [list, setList] = useState(products);
-  const {
-    cart,
-    addToCart,
-    removeFromCart,
-    clearCart,
-    cartTotal,
-    saveCartToDB,
-  } = useCart();
+  const { addToCart } = useCart();
+
   function handleFilter(filters: any) {
     let filtered = products;
-    if (filters.category)
-      filtered = filtered.filter((p) => p.category === filters.category);
+
+    // ✅ filtre par catégorie
+    if (filters.categoryId)
+      filtered = filtered.filter((p) => p.categoryId === filters.categoryId);
+
+    // ✅ filtre par plante
     if (filters.plant)
       filtered = filtered.filter((p) => p.plant === filters.plant);
+
     setList(filtered);
   }
 
@@ -55,7 +54,7 @@ export default function Products({
               </div>
 
               {/* Filtres */}
-              <div className="bg-white/70 backdrop-blur-md shadow-md rounded-xl px-6 pt-3 pb-3 mb-10 w-1/3">
+              <div className="bg-white/70 backdrop-blur-md shadow-md rounded-xl px-6 pt-3 pb-3 mb-10 w-full md:w-1/3 mx-auto">
                 <ProductFilter plants={plants} onFilter={handleFilter} />
               </div>
 
@@ -91,7 +90,7 @@ export default function Products({
   );
 }
 
-// Récupération côté serveur
+// ✅ Récupération côté serveur
 export async function getServerSideProps() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

@@ -22,6 +22,20 @@ async function generateUniqueSlug(name: string) {
   return slug;
 }
 
+// ✅ Fonction pour générer un nom de fichier unique basé sur le nom du produit
+async function generateUniqueFileName(productName: string, ext: string) {
+  const baseName = productName.toLowerCase().replace(/\s+/g, "-");
+  let fileName = `${baseName}${ext}`;
+  let count = 1;
+
+  while (fs.existsSync(path.join(process.cwd(), "public/uploads", fileName))) {
+    fileName = `${baseName}-${count}${ext}`;
+    count++;
+  }
+
+  return fileName;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -41,78 +55,74 @@ export default async function handler(
   }
 
   // ------------------ POST : ajouter un produit ------------------
-if (req.method === "POST") {
-  try {
-    const result = await new Promise<any>((resolve, reject) => {
-      const form = formidable({
-        multiples: false,
-        uploadDir: path.join(process.cwd(), "public/uploads"),
-        keepExtensions: true,
-      });
-
-      form.parse(req, async (err, fields, files) => {
-        if (err) return reject(err);
-
-        const { name, description, price, plant, type, categoryId } = fields;
-
-        if (!name || !price || !categoryId) {
-          return reject(
-            new Error("Champs requis manquants (name, price, categoryId)")
-          );
-        }
-
-        let imagePath = "";
-        if (files.image) {
-          const file = Array.isArray(files.image)
-            ? files.image[0]
-            : files.image;
-          if (file && file.filepath) {
-            const fileName = Date.now() + "-" + file.originalFilename;
-            const newPath = path.join(
-              process.cwd(),
-              "public/uploads",
-              fileName
-            );
-            fs.renameSync(file.filepath, newPath);
-            imagePath = "/uploads/" + fileName;
-          }
-        }
-
-        // Slug unique
-        const slugBase = String(name).toLowerCase().replace(/\s+/g, "-");
-        let slug = slugBase;
-        let count = 1;
-        while (await prisma.product.findUnique({ where: { slug } })) {
-          slug = `${slugBase}-${count}`;
-          count++;
-        }
-
-        const newProduct = await prisma.product.create({
-          data: {
-            name: String(name),
-            slug,
-            description: String(description || ""),
-            price: parseFloat(String(price)),
-            image: imagePath,
-            plant: String(plant || ""),
-            type: String(type || ""),
-            categoryId: parseInt(String(categoryId)),
-          },
+  if (req.method === "POST") {
+    try {
+      const result = await new Promise<any>((resolve, reject) => {
+        const form = formidable({
+          multiples: false,
+          uploadDir: path.join(process.cwd(), "public/uploads"),
+          keepExtensions: true,
         });
 
-        resolve(newProduct);
+        form.parse(req, async (err, fields, files) => {
+          if (err) return reject(err);
+
+          const { name, description, price, plant, type, categoryId } = fields;
+
+          if (!name || !price || !categoryId) {
+            return reject(
+              new Error("Champs requis manquants (name, price, categoryId)")
+            );
+          }
+
+          let imagePath = "";
+          if (files.image) {
+            const file = Array.isArray(files.image)
+              ? files.image[0]
+              : files.image;
+
+            if (file && file.filepath) {
+              const ext = path.extname(file.originalFilename || ".png"); // extension originale
+              const fileName = await generateUniqueFileName(String(name), ext); // ✅ basé sur le nom du produit
+              const newPath = path.join(
+                process.cwd(),
+                "public/uploads",
+                fileName
+              );
+
+              fs.renameSync(file.filepath, newPath);
+              imagePath = "/uploads/" + fileName;
+            }
+          }
+
+          // Slug unique
+          const slug = await generateUniqueSlug(String(name));
+
+          const newProduct = await prisma.product.create({
+            data: {
+              name: String(name),
+              slug,
+              description: String(description || ""),
+              price: parseFloat(String(price)),
+              image: imagePath,
+              plant: String(plant || ""),
+              type: String(type || ""),
+              categoryId: parseInt(String(categoryId)),
+            },
+          });
+
+          resolve(newProduct);
+        });
       });
-    });
 
-    return res.status(201).json(result); // ✅ Ici, outside du callback
-  } catch (error: any) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ error: error.message || "Erreur lors de l'ajout du produit" });
+      return res.status(201).json(result); // ✅ Ici, outside du callback
+    } catch (error: any) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ error: error.message || "Erreur lors de l'ajout du produit" });
+    }
   }
-}
-
 
   // ------------------ Méthode non autorisée ------------------
   res.setHeader("Allow", ["GET", "POST"]);
