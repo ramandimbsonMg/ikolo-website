@@ -84,8 +84,9 @@ export default function LandingPageView() {
         <SectionTitle title="Nos best-sellers" subtitle="Les favoris Ikolo" />
 
         {/* Filtrage catégories + recherche */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 mt-10">
-          <div className="flex items-center gap-3 flex-wrap">
+<div className="flex flex-col md:flex-row md:items-center md:justify-between 
+                  gap-4 mb-6 mt-10 sticky top-24 bg-white z-20 shadow-sm p-3 rounded-lg">
+                              <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() => {
                 setActiveCategory(null);
