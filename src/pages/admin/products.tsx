@@ -1,99 +1,89 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Seo } from "@/ui/components/seo/seo";
-import { Layout } from "@/ui/components/layout/layout";
 import { Dialog } from "@headlessui/react";
 import toast from "react-hot-toast";
 import AdminSidebar from "@/ui/components/sidebar/admin-sidebar";
+import { Seo } from "@/ui/components/seo/seo";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<any[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
-   const [token, setToken] = useState("admin-token");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [token, setToken] = useState("admin-token");
 
-   // ✅ Récupérer le token depuis localStorage
-   useEffect(() => {
-     if (typeof window !== "undefined") {
-       const savedToken = localStorage.getItem("token") || "admin-token";
-       setToken(savedToken);
-     }
-   }, []);
+  // Récupération token
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("token") || "admin-token";
+      setToken(savedToken);
+    }
+  }, []);
 
-   // ✅ Charger produits et catégories
-   useEffect(() => {
-     if (!token) return;
+  // Charger produits et catégories
+  useEffect(() => {
+    if (!token) return;
 
-     // Produits
-     fetch("/api/admin/products", {
-       headers: { Authorization: `Bearer ${token}` },
-     })
-       .then((res) => res.json())
-       .then((data) => setProducts(data.products || []))
-       .catch((err) => console.error(err));
+    fetch("/api/admin/products", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setProducts(data.products || []))
+      .catch(console.error);
 
-     // Catégories
-     fetch("/api/admin/categories", {
-       headers: { Authorization: `Bearer ${token}` },
-     })
-       .then((res) => res.json())
-       .then((data) => setCategories(data.categories || []))
-       .catch((err) => console.error(err));
-   }, [token]);
+    fetch("/api/admin/categories", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setCategories(data.categories || []))
+      .catch(console.error);
+  }, [token]);
 
-   // ✅ Ajouter un produit
-   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-     e.preventDefault();
-     const formData = new FormData(e.currentTarget);
+  // Ajouter produit
+  const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
 
-     try {
-       const res = await fetch("/api/admin/products", {
-         method: "POST",
-         headers: { Authorization: `Bearer ${token}` },
-         body: formData, // multipart/form-data
-       });
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
-       if (!res.ok) {
-         const err = await res.json();
-         throw new Error(err.error || "Erreur inconnue");
-       }
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Erreur inconnue");
+      }
 
-       const newProduct = await res.json();
-       toast.success("Produit ajouté !");
-       setProducts([newProduct, ...products]);
-       setModalOpen(false);
-     } catch (error: any) {
-       toast.error(error.message);
-     }
-   };
+      const newProduct = await res.json();
+      setProducts([newProduct, ...products]);
+      toast.success("Produit ajouté !");
+      setModalOpen(false);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
-   // ✅ Supprimer un produit
-   const handleDeleteProduct = async (productId: number) => {
-     if (!confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
-
-     try {
-       const res = await fetch(`/api/admin/products/${productId}`, {
-         method: "DELETE",
-         headers: { Authorization: `Bearer ${token}` },
-       });
-
-       if (!res.ok) {
-         const err = await res.json();
-         throw new Error(err.error || "Erreur inconnue");
-       }
-
-       setProducts((prev) => prev.filter((p) => p.id !== productId));
-       toast.success("Produit supprimé !");
-     } catch (error: any) {
-       toast.error(error.message);
-     }
-   };
+  // Supprimer produit
+  const handleDeleteProduct = async (id: number) => {
+    if (!confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Erreur suppression");
+      setProducts(products.filter((p) => p.id !== id));
+      toast.success("Produit supprimé !");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
       <Seo title="Admin | Produits" description="Gestion des produits" />
-      {/* <Layout isDisplayBreakCrumbs={false}> */}
       <div className="flex min-h-screen bg-gray-50">
         <AdminSidebar />
         <main className="flex-1 p-8">
@@ -107,7 +97,6 @@ export default function AdminProducts() {
             </button>
           </div>
 
-          {/* ✅ Liste des produits */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((p) => (
               <div
@@ -116,12 +105,11 @@ export default function AdminProducts() {
               >
                 {p.image && (
                   <img
-                    src={p.image} // p.image = "/uploads/xxxxx.jpg"
+                    src={p.image}
                     alt={p.name}
                     className="w-full h-40 object-cover rounded-lg mb-3"
                   />
                 )}
-
                 <h2 className="font-bold text-gray-800">{p.name}</h2>
                 <p className="text-gray-500 text-sm line-clamp-2">
                   {p.description}
@@ -130,10 +118,9 @@ export default function AdminProducts() {
                 <p className="text-gray-400 text-sm">
                   {p.category?.name || "Sans catégorie"}
                 </p>
-                {/* ⚡ Bouton supprimer */}
                 <button
                   onClick={() => handleDeleteProduct(p.id)}
-                  className=" top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
+                  className="px-2 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 mt-2"
                 >
                   Supprimer
                 </button>
@@ -141,7 +128,7 @@ export default function AdminProducts() {
             ))}
           </div>
 
-          {/* ✅ Modal */}
+          {/* Modal Ajouter */}
           <Dialog
             open={modalOpen}
             onClose={() => setModalOpen(false)}
@@ -226,7 +213,6 @@ export default function AdminProducts() {
           </Dialog>
         </main>
       </div>
-      {/* </Layout> */}
     </>
   );
 }
