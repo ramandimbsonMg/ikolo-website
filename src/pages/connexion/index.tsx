@@ -18,12 +18,20 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (token && user?.role) {
-      if (user.role === "admin") router.replace("/admin/dashboard");
-      else router.replace("/");
-    } else setLoading(false);
+    try {
+      const token = localStorage.getItem("token");
+      const userStr = localStorage.getItem("user");
+      const user = userStr ? JSON.parse(userStr) : null;
+
+      if (token && user?.role) {
+        router.replace(user.role === "admin" ? "/admin" : "/");
+      } else {
+        setLoading(false); // formulaire s'affiche seulement si pas connecté
+      }
+    } catch (error) {
+      console.error("Erreur parse localStorage:", error);
+      setLoading(false);
+    }
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
