@@ -1,130 +1,108 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@supabase/supabase-js";
 import formidable from "formidable";
 import fs from "fs";
-import path from "path";
 
-export const config = {
-  api: { bodyParser: false }, // ⚡ obligatoire pour gérer FormData
-};
+// Désactiver bodyParser pour gérer FormData
+export const config = { api: { bodyParser: false } };
 
-// ✅ Fonction pour créer un slug unique
+// Client Supabase (server-side)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+// Slug unique
 async function generateUniqueSlug(name: string) {
-  const baseSlug = name.toLowerCase().replace(/\s+/g, "-");
-  let slug = baseSlug;
-  let count = 1;
-
+  const base = name.toLowerCase().replace(/\s+/g, "-");
+  let slug = base;
+  let i = 1;
   while (await prisma.product.findUnique({ where: { slug } })) {
-    slug = `${baseSlug}-${count}`;
-    count++;
+    slug = `${base}-${i++}`;
   }
-
   return slug;
-}
-
-// ✅ Fonction pour générer un nom de fichier unique basé sur le nom du produit
-async function generateUniqueFileName(productName: string, ext: string) {
-  const baseName = productName.toLowerCase().replace(/\s+/g, "-");
-  let fileName = `${baseName}${ext}`;
-  let count = 1;
-
-  while (fs.existsSync(path.join(process.cwd(), "public/uploads", fileName))) {
-    fileName = `${baseName}-${count}${ext}`;
-    count++;
-  }
-
-  return fileName;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // ------------------ GET : récupérer les produits ------------------
+  // ---------------- GET produits ----------------
   if (req.method === "GET") {
-    try {
-      const products = await prisma.product.findMany({
-        include: { category: true },
-        orderBy: { createdAt: "desc" },
-      });
-      return res.status(200).json({ products });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Erreur lors de la récupération" });
-    }
+    const products = await prisma.product.findMany({
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return res.status(200).json({ products });
   }
 
-  // ------------------ POST : ajouter un produit ------------------
+  // ---------------- POST ajout produit ----------------
   if (req.method === "POST") {
     try {
-      const result = await new Promise<any>((resolve, reject) => {
-        const form = formidable({
-          multiples: false,
-          uploadDir: path.join(process.cwd(), "public/uploads"),
-          keepExtensions: true,
-        });
-
-        form.parse(req, async (err, fields, files) => {
-          if (err) return reject(err);
-
-          const { name, description, price, plant, type, categoryId } = fields;
-
-          if (!name || !price || !categoryId) {
-            return reject(
-              new Error("Champs requis manquants (name, price, categoryId)")
-            );
-          }
-
-          let imagePath = "";
-          if (files.image) {
-            const file = Array.isArray(files.image)
-              ? files.image[0]
-              : files.image;
-
-            if (file && file.filepath) {
-              const ext = path.extname(file.originalFilename || ".png"); // extension originale
-              const fileName = await generateUniqueFileName(String(name), ext); // ✅ basé sur le nom du produit
-              const newPath = path.join(
-                process.cwd(),
-                "public/uploads",
-                fileName
-              );
-
-              fs.renameSync(file.filepath, newPath);
-              imagePath = "/uploads/" + fileName;
-            }
-          }
-
-          // Slug unique
-          const slug = await generateUniqueSlug(String(name));
-
-          const newProduct = await prisma.product.create({
-            data: {
-              name: String(name),
-              slug,
-              description: String(description || ""),
-              price: parseFloat(String(price)),
-              image: imagePath,
-              plant: String(plant || ""),
-              type: String(type || ""),
-              categoryId: parseInt(String(categoryId)),
-            },
-          });
-
-          resolve(newProduct);
+      const form = formidable({ multiples: false, keepExtensions: true });
+      const data: any = await new Promise((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) reject(err);
+          resolve({ fields, files });
         });
       });
 
-      return res.status(201).json(result); // ✅ Ici, outside du callback
-    } catch (error: any) {
-      console.error(error);
-      return res
-        .status(500)
-        .json({ error: error.message || "Erreur lors de l'ajout du produit" });
+      const { name, description, price, categoryId, plant, type } = data.fields;
+      if (!name || !price || !categoryId) {
+        return res.status(400).json({ error: "Champs requis manquants" });
+      }
+
+      // Upload image vers Supabase
+      let publicUrl = "";
+      const file = data.files.image;
+      if (file && !Array.isArray(file)) {
+        const fileExt = file.originalFilename?.split(".").pop() || "png";
+        const fileName = `${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}.${fileExt}`;
+
+        const buffer = fs.readFileSync(file.filepath);
+
+        const { error } = await supabase.storage
+          .from("products") // ⚡ nom de ton bucket Supabase
+          .upload(fileName, buffer, {
+            contentType: file.mimetype || "image/png",
+          });
+
+        if (error) throw error;
+
+        const { data } = supabase.storage
+          .from("products")
+          .getPublicUrl(fileName);
+        publicUrl = data.publicUrl;
+      }
+
+      // Slug unique
+      const slug = await generateUniqueSlug(String(name));
+
+      // Sauvegarde DB
+      const product = await prisma.product.create({
+        data: {
+          name: String(name),
+          slug,
+          description: String(description || ""),
+          price: parseFloat(String(price)),
+          image: publicUrl,
+          plant: String(plant || ""),
+          type: String(type || ""),
+          categoryId: parseInt(String(categoryId)),
+        },
+        include: { category: true },
+      });
+
+      return res.status(201).json(product);
+    } catch (e: any) {
+      console.error(e);
+      return res.status(500).json({ error: e.message });
     }
   }
 
-  // ------------------ Méthode non autorisée ------------------
   res.setHeader("Allow", ["GET", "POST"]);
   return res.status(405).end(`Méthode ${req.method} non autorisée`);
 }

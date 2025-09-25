@@ -11,80 +11,84 @@ export default function AdminProducts() {
   const [products, setProducts] = useState<any[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
-  const [token, setToken] = useState("admin-token");
+   const [token, setToken] = useState("admin-token");
 
-  // ✅ LocalStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem("token") || "admin-token";
-      setToken(savedToken);
-    }
-  }, []);
+   // ✅ Récupérer le token depuis localStorage
+   useEffect(() => {
+     if (typeof window !== "undefined") {
+       const savedToken = localStorage.getItem("token") || "admin-token";
+       setToken(savedToken);
+     }
+   }, []);
 
-  // ✅ Charger produits & catégories
-  useEffect(() => {
-    if (!token) return;
+   // ✅ Charger produits et catégories
+   useEffect(() => {
+     if (!token) return;
 
-    fetch("/api/admin/products", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => setProducts(data.products || []));
+     // Produits
+     fetch("/api/admin/products", {
+       headers: { Authorization: `Bearer ${token}` },
+     })
+       .then((res) => res.json())
+       .then((data) => setProducts(data.products || []))
+       .catch((err) => console.error(err));
 
-    fetch("/api/admin/categories", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => setCategories(data.categories || []));
-  }, [token]);
+     // Catégories
+     fetch("/api/admin/categories", {
+       headers: { Authorization: `Bearer ${token}` },
+     })
+       .then((res) => res.json())
+       .then((data) => setCategories(data.categories || []))
+       .catch((err) => console.error(err));
+   }, [token]);
 
-  // ✅ Ajouter un produit
-  const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+   // ✅ Ajouter un produit
+   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+     const formData = new FormData(e.currentTarget);
 
-    try {
-      const res = await fetch("/api/admin/products", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData, // ⚡ multipart/form-data
-      });
+     try {
+       const res = await fetch("/api/admin/products", {
+         method: "POST",
+         headers: { Authorization: `Bearer ${token}` },
+         body: formData, // multipart/form-data
+       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Erreur inconnue");
-      }
+       if (!res.ok) {
+         const err = await res.json();
+         throw new Error(err.error || "Erreur inconnue");
+       }
 
-      const newProduct = await res.json();
-      toast.success("Produit ajouté !");
-      setModalOpen(false);
-      setProducts([newProduct, ...products]);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  };
-  // ✅ Supprimer un produit
-  const handleDeleteProduct = async (productId: number) => {
-    if (!confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
+       const newProduct = await res.json();
+       toast.success("Produit ajouté !");
+       setProducts([newProduct, ...products]);
+       setModalOpen(false);
+     } catch (error: any) {
+       toast.error(error.message);
+     }
+   };
 
-    try {
-      const res = await fetch(`/api/admin/products/${productId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+   // ✅ Supprimer un produit
+   const handleDeleteProduct = async (productId: number) => {
+     if (!confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Erreur inconnue");
-      }
+     try {
+       const res = await fetch(`/api/admin/products/${productId}`, {
+         method: "DELETE",
+         headers: { Authorization: `Bearer ${token}` },
+       });
 
-      // ⚡ Supprimer localement pour mise à jour immédiate
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
-      toast.success("Produit supprimé !");
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  };
+       if (!res.ok) {
+         const err = await res.json();
+         throw new Error(err.error || "Erreur inconnue");
+       }
+
+       setProducts((prev) => prev.filter((p) => p.id !== productId));
+       toast.success("Produit supprimé !");
+     } catch (error: any) {
+       toast.error(error.message);
+     }
+   };
 
   return (
     <>
