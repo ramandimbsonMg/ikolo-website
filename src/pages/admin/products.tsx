@@ -12,6 +12,7 @@ export default function AdminProducts() {
   const [modalOpen, setModalOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [token, setToken] = useState("admin-token");
+  const [imageMode, setImageMode] = useState<"file" | "url">("file"); // ✅ choix image
 
   // ✅ LocalStorage
   useEffect(() => {
@@ -170,13 +171,48 @@ export default function AdminProducts() {
                     className="w-full p-3 border rounded-lg"
                     required
                   />
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    className="w-full p-3 border rounded-lg"
-                    required
-                  />
+                  {/* ✅ Choix mode image */}
+                  <div className="space-y-2">
+                    <label className="font-medium text-gray-700">
+                      Image du produit
+                    </label>
+                    <div className="flex gap-4">
+                      <label>
+                        <input
+                          type="radio"
+                          value="file"
+                          checked={imageMode === "file"}
+                          onChange={() => setImageMode("file")}
+                        />{" "}
+                        Upload
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          value="url"
+                          checked={imageMode === "url"}
+                          onChange={() => setImageMode("url")}
+                        />{" "}
+                        URL
+                      </label>
+                    </div>
+                  </div>
+
+                  {imageMode === "file" ? (
+                    <input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      className="w-full p-3 border rounded-lg"
+                    />
+                  ) : (
+                    <input
+                      type="url"
+                      name="imageUrl"
+                      placeholder="https://exemple.com/image.jpg"
+                      className="w-full p-3 border rounded-lg"
+                    />
+                  )}
                   <input
                     type="text"
                     name="plant"

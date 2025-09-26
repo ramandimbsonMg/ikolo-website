@@ -67,7 +67,15 @@ export default async function handler(
         form.parse(req, async (err, fields, files) => {
           if (err) return reject(err);
 
-          const { name, description, price, plant, type, categoryId } = fields;
+          const {
+            name,
+            description,
+            price,
+            plant,
+            type,
+            categoryId,
+            imageUrl,
+          } = fields;
 
           if (!name || !price || !categoryId) {
             return reject(
@@ -76,14 +84,19 @@ export default async function handler(
           }
 
           let imagePath = "";
-          if (files.image) {
+
+          // ✅ Si une URL est fournie → on l’utilise directement
+          if (imageUrl && String(imageUrl).trim() !== "") {
+            imagePath = String(imageUrl);
+          } else if (files.image) {
+            // ✅ Sinon on traite le fichier uploadé
             const file = Array.isArray(files.image)
               ? files.image[0]
               : files.image;
 
             if (file && file.filepath) {
-              const ext = path.extname(file.originalFilename || ".png"); // extension originale
-              const fileName = await generateUniqueFileName(String(name), ext); // ✅ basé sur le nom du produit
+              const ext = path.extname(file.originalFilename || ".png");
+              const fileName = await generateUniqueFileName(String(name), ext);
               const newPath = path.join(
                 process.cwd(),
                 "public/uploads",
@@ -115,7 +128,7 @@ export default async function handler(
         });
       });
 
-      return res.status(201).json(result); // ✅ Ici, outside du callback
+      return res.status(201).json(result);
     } catch (error: any) {
       console.error(error);
       return res
