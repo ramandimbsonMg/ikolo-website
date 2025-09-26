@@ -143,7 +143,7 @@ export default function Navigation() {
           <button
             onClick={() => setOpen(!open)}
             className={`md:hidden ${
-              scrolled ? "text-white" : "text-green-800"
+              scrolled ? "text-white bg-green-800" : "text-green-800"
             }`}
           >
             {open ? (
