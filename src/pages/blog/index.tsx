@@ -14,7 +14,7 @@ export default function Blog({ posts, testimonials, newsletters }: any) {
         title="Ikolo | Blog & Actualités"
         description="Découvrez nos actualités, conseils beauté et articles autour des plantes malgaches."
       />
-      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
+      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen px-2">
         <Layout isDisplayBreakCrumbs={false}>
           <ContainerContenu>
             <BlogList posts={posts} />
