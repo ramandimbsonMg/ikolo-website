@@ -1,9 +1,9 @@
+import { useCart } from "@/context/cart-context";
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
 import ProductCard from "@/ui/components/products/product-card";
 import { Seo } from "@/ui/components/seo/seo";
-import { useCart } from "@/pages/api/cart/use-cart";
 
 export default function ProductDetail({
   product,

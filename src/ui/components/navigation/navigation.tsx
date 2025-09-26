@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useCart } from "@/pages/api/cart/use-cart";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useCart } from "@/context/cart-context";
 
 interface User {
   name: string;

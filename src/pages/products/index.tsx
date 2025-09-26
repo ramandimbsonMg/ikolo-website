@@ -1,11 +1,13 @@
+"use client";
+
+import { useState } from "react";
+import { useCart } from "@/context/cart-context";
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/ui/components/container/container";
 import { Layout } from "@/ui/components/layout/layout";
 import ProductCard from "@/ui/components/products/product-card";
 import ProductFilter from "@/ui/components/products/product-filter";
 import { Seo } from "@/ui/components/seo/seo";
-import { useState } from "react";
-import { useCart } from "../api/cart/use-cart";
 
 export default function Products({
   products,
@@ -17,16 +19,20 @@ export default function Products({
   const [list, setList] = useState(products);
   const { addToCart } = useCart();
 
-  function handleFilter(filters: any) {
+  function handleFilter(filters: { plant: string; categoryId: number | "" }) {
+    const { plant, categoryId } = filters;
+
     let filtered = products;
 
-    // ✅ filtre par catégorie
-    if (filters.categoryId)
-      filtered = filtered.filter((p) => p.categoryId === filters.categoryId);
+    // Filtre catégorie
+    if (categoryId !== "") {
+      filtered = filtered.filter((p) => p.categoryId === categoryId);
+    }
 
-    // ✅ filtre par plante
-    if (filters.plant)
-      filtered = filtered.filter((p) => p.plant === filters.plant);
+    // Filtre plante
+    if (plant) {
+      filtered = filtered.filter((p) => p.plant === plant);
+    }
 
     setList(filtered);
   }
@@ -41,7 +47,7 @@ export default function Products({
       <div className="bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
         <Layout isDisplayBreakCrumbs={false}>
           <Container>
-            <section className="py-16">
+            <section className="py-8">
               {/* Header */}
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-extrabold text-primary">
@@ -90,7 +96,7 @@ export default function Products({
   );
 }
 
-// ✅ Récupération côté serveur
+// Récupération côté serveur
 export async function getServerSideProps() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

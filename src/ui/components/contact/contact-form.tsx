@@ -1,12 +1,39 @@
-// src/components/ContactForm.tsx
 import { useState } from "react";
 
 export default function ContactForm() {
   const [sent, setSent] = useState(false);
-  function handleSubmit(e: any) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
-    // envoie vers ton endpoint d'email / CRM
-    setSent(true);
+    setLoading(true);
+    setError("");
+
+    const formData = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      message: e.target.message.value,
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Erreur lors de l'envoi");
+      }
+
+      setSent(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (sent)
@@ -18,6 +45,7 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-3">
+      {error && <p className="text-red-500">{error}</p>}
       <input
         name="name"
         required
@@ -40,9 +68,10 @@ export default function ContactForm() {
       />
       <button
         type="submit"
-        className="bg-ikoloGreen text-white py-2 px-4 rounded-lg"
+        className="bg-primary text-white py-2 px-4 rounded-lg"
+        disabled={loading}
       >
-        Envoyer
+        {loading ? "Envoi..." : "Envoyer"}
       </button>
     </form>
   );

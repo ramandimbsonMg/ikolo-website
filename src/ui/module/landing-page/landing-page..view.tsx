@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useCart } from "@/pages/api/cart/use-cart";
 import HeroBanner from "@/ui/components/actuality/hero-baner";
 import ProductCard from "@/ui/components/products/product-card";
 import SectionTitle from "@/ui/components/section/section-title";
+import { useCart } from "@/context/cart-context";
 
 type Category = { id: number; name: string };
 type Product = {

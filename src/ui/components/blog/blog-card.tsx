@@ -4,21 +4,34 @@ import Image from "next/image";
 
 export default function BlogCard({ post }: { post: any }) {
   return (
-    <article className="border rounded-xl overflow-hidden shadow-sm">
-      <div className="relative h-48 w-full">
-        <Image
-          src={post.image || "/plants/hero.jpg"}
-          alt={post.title}
-          fill
-          style={{ objectFit: "cover" }}
-        />
-      </div>
+    <article className="border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition bg-white">
+      {/* Image si elle existe */}
+      {post.image ? (
+        <div className="relative h-48 w-full">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            style={{ objectFit: "cover" }}
+            className="rounded-t-xl"
+          />
+        </div>
+      ) : (
+        // <div className="h-48 w-full bg-gray-100 rounded-t-xl" /> // juste un espace vide
+        <div></div>
+      )}
+
       <div className="p-4">
-        <h4 className="font-semibold">{post.title}</h4>
-        <p className="text-sm text-gray-600 mt-2">{post.excerpt}</p>
+        <h4 className="font-semibold text-lg">{post.title}</h4>
+        {post.excerpt && (
+          <p className="text-sm text-gray-600 mt-2">{post.excerpt}</p>
+        )}
         <div className="mt-3">
-          <Link href={`/blog/${post.slug}`}>
-            <a className="text-ikoloGreen font-medium">Lire</a>
+          <Link
+            href={`/blog/${post.slug}`}
+            className="text-ikoloGreen font-medium hover:underline"
+          >
+            Lire
           </Link>
         </div>
       </div>

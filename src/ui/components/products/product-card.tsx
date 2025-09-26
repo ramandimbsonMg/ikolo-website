@@ -1,7 +1,7 @@
-import { useCart } from "@/pages/api/cart/use-cart";
 import Image from "next/image";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import Link from "next/link";
+import { useCart } from "@/context/cart-context";
 
 export default function ProductCard({ product, onAdd }: any) {
   const { addToCart } = useCart();
