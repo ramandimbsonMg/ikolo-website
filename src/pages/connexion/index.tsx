@@ -79,10 +79,9 @@ export default function AuthPage() {
   return (
     <>
       <Seo title="Ikolo | Auth" description="Connexion et inscription" />
-      <div className="bg-gradient-to-br from-primary-50 to-secondary-50">
+      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 justify-center">
         <Layout isDisplayBreakCrumbs={false}>
           <div className="min-h-screen flex items-center justify-center">
-            <ContainerContenu>
               <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-8 w-full max-w-md">
                 <h1 className="text-3xl font-bold text-center text-primary mb-6">
                   {mode === "login" ? "Connexion" : "Inscription"}
@@ -165,7 +164,6 @@ export default function AuthPage() {
                     : "Déjà inscrit ? Connectez-vous"}
                 </p>
               </div>
-            </ContainerContenu>
           </div>
         </Layout>
       </div>

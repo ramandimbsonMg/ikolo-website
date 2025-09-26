@@ -203,6 +203,14 @@ export default function Navigation() {
               )}
             </div>
           )}
+          {!user && (
+            <Link
+              href="/connexion"
+              className="px-4 py-2 rounded-full bg-green-700 text-white hover:bg-green-800 text-center hidden lg:block"
+            >
+              Se connecter
+            </Link>
+          )}
         </div>
       </div>
 
