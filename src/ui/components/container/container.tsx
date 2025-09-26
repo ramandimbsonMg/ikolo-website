@@ -14,7 +14,7 @@ export const Container = ({children, className}:Props) => {
 }
 export const ContainerContenu = ({children, className}:Props) => {
     return (
-      <div className={clsx("w-full lg:max-w-8xl mx-auto lg:px-10 px-2", className)}>
+      <div className={clsx("w-full lg:max-w-8xl mx-auto lg:px-10", className)}>
         {children}
       </div>
     );
