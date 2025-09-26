@@ -12,9 +12,9 @@ export default function AdminProducts() {
   const [modalOpen, setModalOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [token, setToken] = useState("admin-token");
-  const [imageMode, setImageMode] = useState<"file" | "url">("file"); // ✅ choix image
+  const [imageMode, setImageMode] = useState<"file" | "url">("file");
+  const [loading, setLoading] = useState(false); // ✅ état loading
 
-  // ✅ LocalStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedToken = localStorage.getItem("token") || "admin-token";
@@ -22,7 +22,6 @@ export default function AdminProducts() {
     }
   }, []);
 
-  // ✅ Charger produits & catégories
   useEffect(() => {
     if (!token) return;
 
@@ -39,16 +38,32 @@ export default function AdminProducts() {
       .then((data) => setCategories(data.categories || []));
   }, [token]);
 
-  // ✅ Ajouter un produit
   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData();
+
+    formData.append("name", form.name.value);
+    formData.append("description", form.description.value);
+    formData.append("price", form.price.value);
+    formData.append("plant", form.plant.value);
+    formData.append("type", form.type.value);
+    formData.append("categoryId", form.categoryId.value);
+
+    // ✅ gérer image file ou url
+    if (imageMode === "file" && form.image.files?.length) {
+      formData.append("image", form.image.files[0]);
+    } else if (imageMode === "url") {
+      formData.append("imageUrl", form.imageUrl.value);
+    }
 
     try {
       const res = await fetch("/api/admin/products", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: formData, // ⚡ multipart/form-data
+        body: formData,
       });
 
       if (!res.ok) {
@@ -58,13 +73,15 @@ export default function AdminProducts() {
 
       const newProduct = await res.json();
       toast.success("Produit ajouté !");
-      setModalOpen(false);
       setProducts([newProduct, ...products]);
-    } catch (error: any) {
-      toast.error(error.message);
+      setModalOpen(false);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
-  // ✅ Supprimer un produit
+
   const handleDeleteProduct = async (productId: number) => {
     if (!confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
 
@@ -79,18 +96,16 @@ export default function AdminProducts() {
         throw new Error(err.error || "Erreur inconnue");
       }
 
-      // ⚡ Supprimer localement pour mise à jour immédiate
       setProducts((prev) => prev.filter((p) => p.id !== productId));
       toast.success("Produit supprimé !");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (err: any) {
+      toast.error(err.message);
     }
   };
 
   return (
     <>
       <Seo title="Admin | Produits" description="Gestion des produits" />
-      {/* <Layout isDisplayBreakCrumbs={false}> */}
       <div className="flex min-h-screen bg-gray-50">
         <AdminSidebar />
         <main className="flex-1 p-8">
@@ -104,7 +119,6 @@ export default function AdminProducts() {
             </button>
           </div>
 
-          {/* ✅ Liste des produits */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((p) => (
               <div
@@ -113,12 +127,11 @@ export default function AdminProducts() {
               >
                 {p.image && (
                   <img
-                    src={p.image} // p.image = "/uploads/xxxxx.jpg"
+                    src={p.image}
                     alt={p.name}
                     className="w-full h-40 object-cover rounded-lg mb-3"
                   />
                 )}
-
                 <h2 className="font-bold text-gray-800">{p.name}</h2>
                 <p className="text-gray-500 text-sm line-clamp-2">
                   {p.description}
@@ -127,10 +140,9 @@ export default function AdminProducts() {
                 <p className="text-gray-400 text-sm">
                   {p.category?.name || "Sans catégorie"}
                 </p>
-                {/* ⚡ Bouton supprimer */}
                 <button
                   onClick={() => handleDeleteProduct(p.id)}
-                  className=" top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
+                  className="top-2 right-2 px-2 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition"
                 >
                   Supprimer
                 </button>
@@ -138,7 +150,6 @@ export default function AdminProducts() {
             ))}
           </div>
 
-          {/* ✅ Modal */}
           <Dialog
             open={modalOpen}
             onClose={() => setModalOpen(false)}
@@ -171,7 +182,8 @@ export default function AdminProducts() {
                     className="w-full p-3 border rounded-lg"
                     required
                   />
-                  {/* ✅ Choix mode image */}
+
+                  {/* Choix image */}
                   <div className="space-y-2">
                     <label className="font-medium text-gray-700">
                       Image du produit
@@ -213,6 +225,7 @@ export default function AdminProducts() {
                       className="w-full p-3 border rounded-lg"
                     />
                   )}
+
                   <input
                     type="text"
                     name="plant"
@@ -237,6 +250,7 @@ export default function AdminProducts() {
                       </option>
                     ))}
                   </select>
+
                   <div className="flex justify-end gap-2 mt-4">
                     <button
                       type="button"
@@ -247,9 +261,10 @@ export default function AdminProducts() {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-cyan-600 text-white rounded-lg"
+                      disabled={loading}
+                      className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition"
                     >
-                      Ajouter
+                      {loading ? "Ajout..." : "Ajouter"}
                     </button>
                   </div>
                 </form>
@@ -258,7 +273,6 @@ export default function AdminProducts() {
           </Dialog>
         </main>
       </div>
-      {/* </Layout> */}
     </>
   );
 }
